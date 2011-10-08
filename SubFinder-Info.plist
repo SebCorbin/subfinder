@@ -16,24 +16,18 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.3.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleShortVersionString</key>
-	<string>0.3</string>
+	<key>CFBundleVersion</key>
+	<string>0.3.1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
-	<key>CFBundleVersion</key>
-	<string>0.3</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
-	<key>SUFeedURL</key>
-	<string>http://subfinder.sebcorbin.fr/appcast.xml</string>
-	<key>SUEnableAutomaticChecks</key>
-	<true/>
 	<key>NSServices</key>
 	<array>
 		<dict>
@@ -42,10 +36,10 @@
 				<key>default</key>
 				<string>Trouver des sous-titres</string>
 			</dict>
-			<key>NSPortName</key>
-			<string>SubFinder</string>
 			<key>NSMessage</key>
 			<string>findSubtitle</string>
+			<key>NSPortName</key>
+			<string>SubFinder</string>
 			<key>NSRequiredContext</key>
 			<dict>
 				<key>NSApplicationIdentifier</key>
@@ -59,5 +53,11 @@
 			<string>10000</string>
 		</dict>
 	</array>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>http://subfinder.sebcorbin.fr/appcast.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
 </dict>
 </plist>

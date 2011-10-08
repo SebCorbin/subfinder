@@ -52,15 +52,19 @@
 	
 	if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
         NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
-		BOOL found = FALSE;
+		int found = 0;
 		
         for(NSString *file in files) {
-			found = [self findSubtitleForFile:file] && found;
+			[Logger log:@"%@", file];
+			found += [self findSubtitleForFile:file] ? 1 : 0;
 		}
 		if (found) {
-			[progressLabel setStringValue:@"Terminé"];
+			[progressLabel setStringValue:[NSString stringWithFormat:@"Terminé : %d sous-titre(s) trouvé(s)", found]];
 			if(![closeOnFoundCheckbox intValue]) {
 				[NSApp waitUntilExit];
+			}
+			else {
+				[NSApp terminate:nil];
 			}
 		}
 		else {
@@ -68,7 +72,7 @@
 			[NSApp waitUntilExit];
 		}
     }
-	else {
+	else if(!DEBUG) {
 		[progressLabel setStringValue:@"Pas de fichiers passés en paramètres"];
 		[NSApp waitUntilExit];
 	}
@@ -76,7 +80,7 @@
 	
 	//Debug
 	if (DEBUG && pboard == nil) {
-		[self findSubtitleForFile:@"/Users/sebastien/Downloads/The.Big.Bang.Theory.S04E19.PROPER.HDTV.XviD-FEVER.avi"];
+		[self findSubtitleForFile:@"/Users/sebastien/Downloads/The.Big.Bang.Theory.S05E04.The.Wiggly.Finger.Catalyst.HDTV.XviD-FQM.avi"];
 		[progressLabel setStringValue:@"Terminé"];
 	}
 }
@@ -131,10 +135,7 @@
 		[okButton setHidden:FALSE];
 		return FALSE;
 	}
-	else {
-		return TRUE;
-	}
-	
+	return TRUE;
 }
 
 /**
@@ -162,37 +163,35 @@
 	NSURLResponse *response = nil;
 	NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:NULL];
 	
-	// TODO non renommage !
-	NSLog(@"%@", [response suggestedFilename]);
-	
 	// Unzip
 	if ([[response MIMEType] isEqualToString:@"application/zip"]) {
 		[Logger log:@"Décompression"];
 		[progressLabel setStringValue:[NSString stringWithFormat:@"Décompression"]];
-		NSURL *zipUrl = [NSURL fileURLWithPath:[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"zip"]];
+		NSURL *zipUrl = [NSURL fileURLWithPath:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:[response suggestedFilename]]];
 		NSError *writeError;
-		[data writeToURL:zipUrl options:NSDataWritingAtomic error:&writeError];
-		if (writeError) {
-			[Logger log:@"Erreur lors de l'enregistrement du zip: %@", writeError];
+		if (![data writeToURL:zipUrl atomically:YES]) {
+			[Logger log:@"Erreur lors de l'enregistrement du zip"];
 		}
 		
 		NSTask *unzip = [[NSTask alloc] init];
-		NSPipe *aPipe = [NSPipe pipe];
+		NSPipe *zipPipe = [NSPipe pipe];
 		[unzip setLaunchPath:@"/usr/bin/unzip"];
-		[unzip setStandardOutput:aPipe];
+		[unzip setStandardOutput:zipPipe];
 		[unzip setArguments:[NSArray arrayWithObjects: @"-p", [NSString stringWithFormat:@"%@", [zipUrl relativePath]], nil]];
 		[unzip launch];
 		
-		NSData *data = [[aPipe fileHandleForReading] readDataToEndOfFile];
+		NSData *data = [[zipPipe fileHandleForReading] readDataToEndOfFile];
 		
 		NSURL *srtUrl = [NSURL fileURLWithPath:[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"srt"]];
 		[data writeToURL:srtUrl options:YES error:&writeError];
-		[data release];
-		[unzip terminate];
+		[unzip waitUntilExit];
 		[unzip release];
-		NSFileManager* fm = [[NSFileManager alloc] init];
-		if (![fm removeItemAtURL:zipUrl error:&writeError] && writeError) {
+		NSFileManager* fm = [NSFileManager defaultManager];
+		if (![fm removeItemAtURL:zipUrl error:NULL]) {
 			[Logger log:@"Erreur lors de la suppression du zip: %@", writeError];
+		}
+		else {
+			[Logger log:@"Archive supprimée avec succès"];
 		}
 		[fm release];
 	}
@@ -210,7 +209,6 @@
 			[Logger log:@"Erreur lors de l'enregistrement du fichier: %@", writeError];
 		}
 	}
-	
 	return TRUE;
 }
 
