@@ -50,7 +50,8 @@
 	[serviceWindow center];
 	[serviceWindow makeKeyAndOrderFront:nil];
 	
-	if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
+	NSArray *types = [pboard types];
+	if ( [types containsObject:NSFilenamesPboardType] ) {
         NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
 		int found = 0;
 		
@@ -80,7 +81,7 @@
 	
 	//Debug
 	if (DEBUG && pboard == nil) {
-		[self findSubtitleForFile:@"/Users/sebastien/Downloads/The.Big.Bang.Theory.S05E04.The.Wiggly.Finger.Catalyst.HDTV.XviD-FQM.avi"];
+		[self findSubtitleForFile:@"/Volumes/Disque dur/Téléchargements/Dexter.S06E02.Once.Upon.a.Time.HDTV.XviD-FQM.avi"];
 		[progressLabel setStringValue:@"Terminé"];
 	}
 }
@@ -95,7 +96,7 @@
 	NSString *pBoardString = [fileUrl absoluteString];
 	
 	// Get the filename
-	NSFileWrapper *file = [[NSFileWrapper alloc] initWithURL:[NSURL URLWithString:pBoardString] options:NSFileWrapperReadingImmediate error:NULL];
+	NSFileWrapper *file = [[NSFileWrapper alloc] initWithURL:[NSURL URLWithString:pBoardString] options:NSFileWrapperReadingWithoutMapping error:NULL];
 	if(!file ) {
 		[Logger log:@"Le fichier source n'a pas été trouvé"];
 		[progressLabel setStringValue:@"Le fichier source n'a pas été trouvé"];

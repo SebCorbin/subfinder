@@ -1,8 +1,6 @@
-English.lproj/
 Sparkle.framework/
 SubFinder.xcodeproj/*.pbxuser
 SubFinder.xcodeproj/*.perspectivev3
 SubFinder_Prefix.pch
 build/
-dsa_pub.pem
 
