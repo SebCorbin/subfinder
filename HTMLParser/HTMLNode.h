@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <libxml/HTMLparser.h>
 #import <libxml/HTMLtree.h>
-#import "HTMLParser.h"
+#import "libxml/HTMLparser.h"
 
 @class HTMLParser;
 

@@ -6,6 +6,7 @@
 //  Copyright 2010 Ben Reeves. All rights reserved.
 //
 
+#import "libxml/HTMLparser.h"
 #import "HTMLParser.h"
 
 
