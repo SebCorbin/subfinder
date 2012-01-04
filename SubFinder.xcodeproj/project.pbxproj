@@ -21,24 +21,30 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* SubFinderAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* SubFinderAppDelegate.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		BE4081D0138100EB00753391 /* Unzipper.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4081CF138100EB00753391 /* Unzipper.m */; };
 		BE4BDFFB1369EC5E00078374 /* SubSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4BDFFA1369EC5E00078374 /* SubSource.m */; };
 		BE4BDFFE1369ED6900078374 /* SubFile.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4BDFFD1369ED6800078374 /* SubFile.m */; };
 		BE4BE0011369EDBA00078374 /* Logger.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4BE0001369EDBA00078374 /* Logger.m */; };
 		BE888D5B132BBA7A00191768 /* RegexKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE888D5A132BBA7A00191768 /* RegexKit.framework */; };
 		BE888D68132BBB2C00191768 /* HTMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = BE888D65132BBB2C00191768 /* HTMLNode.m */; };
 		BE888D69132BBB2C00191768 /* HTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = BE888D66132BBB2C00191768 /* HTMLParser.m */; };
+		BEA459EB14AF31B0009209A8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58150DA1D0A300B32029 /* MainMenu.xib */; };
 		BEB4A75F135DB0BF004CF7C9 /* SubFinderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEB4A75E135DB0BF004CF7C9 /* SubFinderTest.m */; };
+		BEC4C67414B4DD5600B98277 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A954540054247C /* Localizable.strings */; };
 		BED19398132BD56000C47033 /* RegexKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BE888D5A132BBA7A00191768 /* RegexKit.framework */; };
 		BEFE5404133E122200FD95C8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFE5403133E122200FD95C8 /* Sparkle.framework */; };
 		BEFE5426133E126C00FD95C8 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BEFE5403133E122200FD95C8 /* Sparkle.framework */; };
 		BEFE5430133E146400FD95C8 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = BEFE542F133E146400FD95C8 /* dsa_pub.pem */; };
 		BEFE5433133E350400FD95C8 /* SubFinder.icns in Resources */ = {isa = PBXBuildFile; fileRef = BEFE5432133E350400FD95C8 /* SubFinder.icns */; };
+		C01FCF5008A954540054247F /* SubFileShow.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A954540054247E /* SubFileShow.m */; };
+		C01FCF5008A9545400542482 /* SubFileMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A9545400542481 /* SubFileMovie.m */; };
+		C01FCF5008A9545400542490 /* SubSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A954540054248F /* SubSheetController.m */; };
+		C01FCF5008A9545400542497 /* Addic7edService.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A9545400542496 /* Addic7edService.m */; };
+		C01FCF5008A954540054249A /* BetaseriesService.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A9545400542499 /* BetaseriesService.m */; };
+		C01FCF5008A954540054249C /* ServicesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A954540054249B /* ServicesController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +75,7 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
-		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1DDD58150DA1D0A300B32029 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		256AC3D80F4B6AC300CF3369 /* SubFinderAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubFinderAppDelegate.h; sourceTree = "<group>"; };
 		256AC3D90F4B6AC300CF3369 /* SubFinderAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubFinderAppDelegate.m; sourceTree = "<group>"; };
 		256AC3F00F4B6AF500CF3369 /* SubFinder_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubFinder_Prefix.pch; sourceTree = "<group>"; };
@@ -78,8 +84,6 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* SubFinder-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SubFinder-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SubFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SubFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE4081CE138100EB00753391 /* Unzipper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Unzipper.h; sourceTree = "<group>"; };
-		BE4081CF138100EB00753391 /* Unzipper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Unzipper.m; sourceTree = "<group>"; };
 		BE4BDFF91369EC5E00078374 /* SubSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubSource.h; sourceTree = "<group>"; };
 		BE4BDFFA1369EC5E00078374 /* SubSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubSource.m; sourceTree = "<group>"; };
 		BE4BDFFC1369ED6800078374 /* SubFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubFile.h; sourceTree = "<group>"; };
@@ -97,6 +101,20 @@
 		BEFE5403133E122200FD95C8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		BEFE542F133E146400FD95C8 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		BEFE5432133E350400FD95C8 /* SubFinder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SubFinder.icns; sourceTree = "<group>"; };
+		C01FCF5008A954540054247C /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		C01FCF5008A954540054247E /* SubFileShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubFileShow.m; sourceTree = "<group>"; };
+		C01FCF5008A9545400542480 /* SubFileShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubFileShow.h; sourceTree = "<group>"; };
+		C01FCF5008A9545400542481 /* SubFileMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubFileMovie.m; sourceTree = "<group>"; };
+		C01FCF5008A9545400542483 /* SubFileMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubFileMovie.h; sourceTree = "<group>"; };
+		C01FCF5008A9545400542484 /* ServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceProtocol.h; sourceTree = "<group>"; };
+		C01FCF5008A954540054248F /* SubSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubSheetController.m; sourceTree = "<group>"; };
+		C01FCF5008A9545400542491 /* SubSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubSheetController.h; sourceTree = "<group>"; };
+		C01FCF5008A9545400542495 /* Addic7edService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Addic7edService.h; path = Services/Addic7edService.h; sourceTree = "<group>"; };
+		C01FCF5008A9545400542496 /* Addic7edService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Addic7edService.m; path = Services/Addic7edService.m; sourceTree = "<group>"; };
+		C01FCF5008A9545400542498 /* BetaseriesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BetaseriesService.h; path = Services/BetaseriesService.h; sourceTree = "<group>"; };
+		C01FCF5008A9545400542499 /* BetaseriesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BetaseriesService.m; path = Services/BetaseriesService.m; sourceTree = "<group>"; };
+		C01FCF5008A954540054249B /* ServicesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServicesController.m; sourceTree = "<group>"; };
+		C01FCF5008A954540054249D /* ServicesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServicesController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,18 +141,14 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				BE4081CE138100EB00753391 /* Unzipper.h */,
-				BE4081CF138100EB00753391 /* Unzipper.m */,
-				BE888D64132BBB2C00191768 /* HTMLNode.h */,
-				BE888D65132BBB2C00191768 /* HTMLNode.m */,
-				BE888D66132BBB2C00191768 /* HTMLParser.m */,
-				BE888D67132BBB2C00191768 /* HTMLParser.h */,
-				256AC3D80F4B6AC300CF3369 /* SubFinderAppDelegate.h */,
+				C01FCF5008A954540054249D /* ServicesController.h */,
+				C01FCF5008A954540054249B /* ServicesController.m */,
 				256AC3D90F4B6AC300CF3369 /* SubFinderAppDelegate.m */,
-				BE4BDFF91369EC5E00078374 /* SubSource.h */,
-				BE4BDFFA1369EC5E00078374 /* SubSource.m */,
-				BE4BDFFC1369ED6800078374 /* SubFile.h */,
-				BE4BDFFD1369ED6800078374 /* SubFile.m */,
+				C01FCF5008A954540054248F /* SubSheetController.m */,
+				C01FCF5008A9545400542491 /* SubSheetController.h */,
+				C01FCF5008A9545400542486 /* Models */,
+				C01FCF5008A954540054248E /* HTMLParser */,
+				256AC3D80F4B6AC300CF3369 /* SubFinderAppDelegate.h */,
 				BE4BDFFF1369EDBA00078374 /* Logger.h */,
 				BE4BE0001369EDBA00078374 /* Logger.m */,
 			);
@@ -173,6 +187,7 @@
 		29B97314FDCFA39411CA2CEA /* SubFinder */ = {
 			isa = PBXGroup;
 			children = (
+				C01FCF5008A954540054247C /* Localizable.strings */,
 				BEB4A75B135DB049004CF7C9 /* TestClasses */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -200,7 +215,7 @@
 				BEFE542F133E146400FD95C8 /* dsa_pub.pem */,
 				8D1107310486CEB800E47090 /* SubFinder-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				1DDD58150DA1D0A300B32029 /* MainMenu.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -220,6 +235,45 @@
 				BEB4A75E135DB0BF004CF7C9 /* SubFinderTest.m */,
 			);
 			name = TestClasses;
+			sourceTree = "<group>";
+		};
+		C01FCF5008A9545400542486 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BE4BDFFA1369EC5E00078374 /* SubSource.m */,
+				BE4BDFF91369EC5E00078374 /* SubSource.h */,
+				C01FCF5008A954540054247E /* SubFileShow.m */,
+				C01FCF5008A9545400542480 /* SubFileShow.h */,
+				C01FCF5008A9545400542481 /* SubFileMovie.m */,
+				C01FCF5008A9545400542483 /* SubFileMovie.h */,
+				BE4BDFFD1369ED6800078374 /* SubFile.m */,
+				BE4BDFFC1369ED6800078374 /* SubFile.h */,
+				C01FCF5008A9545400542484 /* ServiceProtocol.h */,
+				C01FCF5008A954540054248A /* Services */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		C01FCF5008A954540054248A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C01FCF5008A9545400542499 /* BetaseriesService.m */,
+				C01FCF5008A9545400542498 /* BetaseriesService.h */,
+				C01FCF5008A9545400542496 /* Addic7edService.m */,
+				C01FCF5008A9545400542495 /* Addic7edService.h */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		C01FCF5008A954540054248E /* HTMLParser */ = {
+			isa = PBXGroup;
+			children = (
+				BE888D66132BBB2C00191768 /* HTMLParser.m */,
+				BE888D67132BBB2C00191768 /* HTMLParser.h */,
+				BE888D65132BBB2C00191768 /* HTMLNode.m */,
+				BE888D64132BBB2C00191768 /* HTMLNode.h */,
+			);
+			path = HTMLParser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -298,9 +352,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				BEA459EB14AF31B0009209A8 /* MainMenu.xib in Resources */,
 				BEFE5430133E146400FD95C8 /* dsa_pub.pem in Resources */,
 				BEFE5433133E350400FD95C8 /* SubFinder.icns in Resources */,
+				BEC4C67414B4DD5600B98277 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +409,12 @@
 				BE4BDFFB1369EC5E00078374 /* SubSource.m in Sources */,
 				BE4BDFFE1369ED6900078374 /* SubFile.m in Sources */,
 				BE4BE0011369EDBA00078374 /* Logger.m in Sources */,
-				BE4081D0138100EB00753391 /* Unzipper.m in Sources */,
+				C01FCF5008A954540054247F /* SubFileShow.m in Sources */,
+				C01FCF5008A9545400542482 /* SubFileMovie.m in Sources */,
+				C01FCF5008A9545400542490 /* SubSheetController.m in Sources */,
+				C01FCF5008A9545400542497 /* Addic7edService.m in Sources */,
+				C01FCF5008A954540054249A /* BetaseriesService.m in Sources */,
+				C01FCF5008A954540054249C /* ServicesController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,14 +443,6 @@
 				089C165DFE840E0CC02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1DDD58150DA1D0A300B32029 /* English */,
-			);
-			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

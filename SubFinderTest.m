@@ -2,12 +2,11 @@
 //  SubFinderTest.m
 //  SubFinder
 //
-//  Created by sebcorbin on 19/04/11.
+//  Created by SebCorbin on 19/04/11.
 //  Copyright 2011 SebCorbin. All rights reserved.
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "Unzipper.h"
 
 @interface SubFinderTest : SenTestCase
 {
