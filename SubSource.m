@@ -40,4 +40,15 @@
 }
 
 
+- (id)initWithSource:(Class)source link:(id)aLink file:(id)aFile hearing:(NSNumber)isHearingImpaired {
+    self = [super init];
+    if (self) {
+        self.sourceClass = [[source copy] autorelease];
+        self.link = [[aLink copy] autorelease];
+        self.originalFile = [[aFile copy] autorelease];
+        self.hearing = [isHearingImpaired copy];
+    }
+    return self;
+
+}
 @end

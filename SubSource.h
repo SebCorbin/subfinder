@@ -10,11 +10,11 @@
 #import "SubFile.h"
 
 @interface SubSource : NSObject {
-	Class sourceClass;
+    Class sourceClass;
     NSURL *link;
     SubFile *originalFile;
 
-    // @TODO transform following properties into a NSDictionary
+    // @TODO transform following properties into a NSDictionary to make them optional
     NSString *team;
     NSNumber *hearing;
 }
@@ -29,5 +29,6 @@
 - (id)initWithSource:(Class)source link:(NSURL *)aLink file:(SubFile *)aFile team:(NSString *)aTeam
              hearing:(NSNumber *)isHearingImpaired;
 
+- (id)initWithSource:(Class)source link:(id)aLink file:(id)aFile hearing:(NSNumber)isHearingImpaired;
 
 @end
