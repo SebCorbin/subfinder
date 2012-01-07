@@ -8,6 +8,11 @@
 
 @implementation SubFileMovie
 
+@synthesize movie;
+@synthesize year;
+@synthesize part;
+
+
 - (id)initWithSubFile:(SubFile *)subFile {
     self = [super init];
     if (self) {
@@ -33,6 +38,11 @@
         [dirtyTeams removeObjectsMatchingRegex:@"cd2"];
     }
     teams = [NSArray arrayWithArray:dirtyTeams];
+}
+
+- (void)dealloc {
+    [movie release];
+    [super dealloc];
 }
 
 

@@ -14,6 +14,10 @@
     NSInteger part;
 }
 
+@property(nonatomic, retain) NSString *movie;
+@property(nonatomic) NSInteger year;
+@property(nonatomic) NSInteger part;
+
 - (id)initWithSubFile:(SubFile *)subFile;
 
 @end
