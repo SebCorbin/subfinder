@@ -82,14 +82,13 @@
             }
             // Find if there is hearing impaired
             NSNumber *hearingImpaired = [NSNumber numberWithBool:NO];
-            if([[[[lang parent] nextNode] findChildrenWithAttribute:@"title" matchingName:@"Hearing Impaired" allowPartial:NO] count]) {
+            if ([[[[lang parent] nextNode] findChildrenWithAttribute:@"title" matchingName:@"Hearing Impaired" allowPartial:NO] count]) {
                 hearingImpaired = [NSNumber numberWithBool:YES];
             }
 
             // Subtitle found
             HTMLNode *tdSubtitle = [[lang parent] findChildWithAttribute:@"colspan" matchingName:@"3" allowPartial:0];
             NSString *link = [NSString stringWithFormat:@"http://www.addic7ed.com%@", [[[tdSubtitle findChildTags:@"a"] lastObject] getAttributeNamed:@"href"]];
-            // @TODO Implement "Hearing Impaired" contained in title of <img>
             SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[[NSURL alloc] initWithString:link]
                                                                  file:file team:subTeamsString hearing:hearingImpaired] autorelease];
             [subtitles addObject:subSource];
