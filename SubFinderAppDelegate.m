@@ -35,6 +35,33 @@
 /**
  * Service : find a subtitle
  */
+- (void)processFilePath:(NSString *)path {
+    id file;
+    file = [[[[SubFile alloc] initWithLocalUrl:path] findType] autorelease];
+    [(SubFile *) file guessFileData];
+
+    if ([[ServicesController chosenServices] count] == 0) {
+        [Logger log:@"No service chosen"];
+    }
+
+    NSMutableArray *subtitles = [NSMutableArray array];
+    for (NSString *serviceName in [ServicesController chosenServices]) {
+        id service = [[NSClassFromString([serviceName stringByAppendingString:@"Service"]) alloc] init];
+        id serviceClass = [service class];
+        if ([file class] == NSClassFromString(@"SubFileShow") && [serviceClass handlesShows] ||
+                [file class] == NSClassFromString(@"SubFileMovie") && [serviceClass handlesMovies]) {
+            [subtitles addObjectsFromArray:[service searchSubtitlesForSubFile:file]];
+        }
+    }
+
+    if ([subtitles count]) {
+        [subSheet showSubtitles:subtitles inWindow:serviceWindow];
+    }
+    if ([[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"CloseOnSuccess"]) {
+        [NSApp terminate:nil];
+    }
+}
+
 - (void)findSubtitle:(NSPasteboard *)pBoard userData:(NSString *)userData error:(NSString **)error {
     // Window behaviour
     [preferencesWindow close];
@@ -51,29 +78,9 @@
     NSArray *types = [pBoard types];
     if ([types containsObject:NSFilenamesPboardType]) {
         NSArray *files = [pBoard propertyListForType:NSFilenamesPboardType];
-        int found = 0;
-
         for (NSString *path in files) {
             // Here file is a local URL
-            NSLog(@"%@", path);
-            id file;
-            file = [[[SubFile alloc] initWithLocalUrl:path] findType];
-            [(SubFile *) file guessFileData];
-
-            if ([[ServicesController chosenServices] count] == 0) {
-                [Logger log:@"No service chosen"];
-            }
-
-            NSMutableArray *subtitles = [NSMutableArray array];
-            for (NSString *serviceName in [ServicesController chosenServices]) {
-                id service = [[NSClassFromString([serviceName stringByAppendingString:@"Service"]) alloc] init];
-                [subtitles addObjectsFromArray:[service searchSubtitlesForSubFile:file]];
-            }
-
-            [subSheet showSubtitles:subtitles inWindow:serviceWindow];
-            if ([[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"CloseOnSuccess"]) {
-                [NSApp terminate:nil];
-            }
+            [self processFilePath:path];
         }
     }
     else if (!DEBUG) {
@@ -83,24 +90,7 @@
 
     //Debug
     if (DEBUG && pBoard == nil) {
-        id file;
-        file = [[[SubFile alloc] initWithLocalUrl:@"/Users/sebastien/downloads/Chuck.S05E06.HDTV.XviD-LOL.avi"] findType];
-        [(SubFile *) file guessFileData];
-
-        if ([[ServicesController chosenServices] count] == 0) {
-            [Logger log:@"No service chosen"];
-        }
-
-        NSMutableArray *subtitles = [NSMutableArray array];
-        for (NSString *serviceName in [ServicesController chosenServices]) {
-            id service = [[NSClassFromString([serviceName stringByAppendingString:@"Service"]) alloc] init];
-            [subtitles addObjectsFromArray:[service searchSubtitlesForSubFile:file]];
-        }
-
-        [subSheet showSubtitles:subtitles inWindow:serviceWindow];
-        if ([[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"CloseOnSuccess"]) {
-            [NSApp terminate:nil];
-        }
+        [self processFilePath:@"/Users/sebastien/Downloads/Films/Cowboys and Aliens (2011) DVDRip XviD-MAXSPEED/Cowboys and Aliens (2011) DVDRip XviD-MAXSPEED www.torentz.3xforum.ro.avi"];
     }
 }
 
@@ -144,7 +134,7 @@
         [checkBox setTitle:nil];
         [servicesBox addSubview:checkBox];
         [checkBox bind:@"value" toObject:[NSUserDefaultsController sharedUserDefaultsController]
-           withKeyPath:[@"values.Service" stringByAppendingString:[service serviceName]]
+           withKeyPath:[@"values.Services." stringByAppendingString:[service serviceName]]
                options:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
                                                    forKey:@"NSContinuouslyUpdatesValue"]];
 
