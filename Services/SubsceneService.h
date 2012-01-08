@@ -14,8 +14,6 @@
 
 }
 
-+ (NSString *)getContentFromUrl:(NSURL *)url;
-
 + (NSString *)getFullLanguageName:(NSString *)lang;
 
 

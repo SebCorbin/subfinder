@@ -16,6 +16,7 @@
         services = [[NSArray alloc] initWithObjects:
                 @"Addic7ed",
                 @"Betaseries",
+                @"Subscene",
                 nil];
     }
     return services;
@@ -26,7 +27,7 @@
     NSMutableArray *chosen = [NSMutableArray array];
     NSDictionary *preferences = [[NSUserDefaultsController sharedUserDefaultsController] values];
     for (NSString *service in services) {
-        if ([preferences valueForKey:service]) {
+        if ([preferences valueForKeyPath:[@"Services." stringByAppendingString:service]]) {
             [chosen addObject:service];
         }
     }
