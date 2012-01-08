@@ -17,7 +17,6 @@
 @synthesize sourceClass;
 @synthesize originalFile;
 
-
 - (id)initWithSource:(Class)source link:(NSURL *)aLink file:(SubFile *)aFile team:(NSString *)aTeam
              hearing:(NSNumber *)isHearingImpaired {
     self = [super init];
@@ -39,16 +38,4 @@
     [super dealloc];
 }
 
-
-- (id)initWithSource:(Class)source link:(id)aLink file:(id)aFile hearing:(NSNumber)isHearingImpaired {
-    self = [super init];
-    if (self) {
-        self.sourceClass = [[source copy] autorelease];
-        self.link = [[aLink copy] autorelease];
-        self.originalFile = [[aFile copy] autorelease];
-        self.hearing = [isHearingImpaired copy];
-    }
-    return self;
-
-}
 @end

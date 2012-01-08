@@ -25,10 +25,7 @@
 @property(nonatomic, retain) NSNumber *hearing;
 @property(nonatomic, retain) SubFile *originalFile;
 
-
 - (id)initWithSource:(Class)source link:(NSURL *)aLink file:(SubFile *)aFile team:(NSString *)aTeam
              hearing:(NSNumber *)isHearingImpaired;
-
-- (id)initWithSource:(Class)source link:(id)aLink file:(id)aFile hearing:(NSNumber)isHearingImpaired;
 
 @end
