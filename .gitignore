@@ -1,4 +1,5 @@
 Sparkle.framework/
+SubFinder.xcodeproj/*.mode1v3
 SubFinder.xcodeproj/*.pbxuser
 SubFinder.xcodeproj/*.perspectivev3
 SubFinder_Prefix.pch
