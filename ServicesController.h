@@ -21,5 +21,7 @@
 
 + (NSArray *)getServicesForLanguage:(NSString *)lang;
 
++ (NSString *)getContentFromUrl:(NSURL *)url;
+
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "ServicesController.h";
+#import "SubFinderAppDelegate.h"
 
 @implementation ServicesController
 
@@ -63,5 +64,31 @@
     NSArray *servicesForLanguage = [[servicesForLanguageReverted reverseObjectEnumerator] allObjects];
     return servicesForLanguage;
 }
+
++ (NSString *)getContentFromUrl:(NSURL *)url {
+    NSURLRequest *query = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                       timeoutInterval:60.0];
+    [Logger log:@"%@", [url absoluteString]];
+    NSURLResponse *response = nil;
+    NSError **error = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:error];
+    if (!response) {
+        NSAlert *alert = [NSAlert alertWithMessageText:@"No network connection" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Please verify your internet connectivity", @"VerifyConnection")];
+
+        [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+    }
+    else {
+        // HTTP Status code must be 200
+        int statusCode = [(NSHTTPURLResponse *) response statusCode];
+        if (statusCode == 404) {
+            // @TODO Handle 404
+        }
+        else if (statusCode == 200) {
+            return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        }
+    }
+    return nil;
+}
+
 
 @end

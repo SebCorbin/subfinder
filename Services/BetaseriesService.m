@@ -43,27 +43,6 @@
     return subtitles;
 }
 
-+ (NSString *)getContentsFromURL:(NSURL *)url {
-    NSURLRequest *query = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                       timeoutInterval:60.0];
-    NSURLResponse *response = nil;
-    NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:NULL];
-    if (!response) {
-        // @TODO Connection failed
-    }
-    else {
-        // HTTP Status code must be 200
-        int statusCode = [(NSHTTPURLResponse *) response statusCode];
-        if (statusCode == 404) {
-            // @TODO Handle 404
-        }
-        else if (statusCode == 200) {
-            return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        }
-    }
-    return nil;
-}
-
 
 + (void)downloadSubtitleForSource:(SubSource *)source {
     /*

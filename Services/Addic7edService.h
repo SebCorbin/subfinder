@@ -18,8 +18,6 @@
 
 - (NSMutableArray *)searchSubtitlesForSubFile:(id)file;
 
-+ (NSString *)getContentFromUrl:(NSURL *)url;
-
 + (NSString *)getLanguageFromKey:(NSString *)key;
 
 

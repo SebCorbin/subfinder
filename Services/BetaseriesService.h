@@ -15,6 +15,4 @@
 
 }
 
-+ (NSString *)getContentsFromURL:(NSURL *)url;
-
 @end
