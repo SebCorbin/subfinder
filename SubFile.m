@@ -53,8 +53,9 @@
     return nil;
 }
 
-- (void)guessFileData {
+- (BOOL)guessFileData {
     // Nothing to do here
+    return NO;
 }
 
 

@@ -23,19 +23,20 @@
     return self;
 }
 
-- (void)guessFileData {
+- (BOOL)guessFileData {
     NSString *strTeams = nil;
     if (![filename getCapturesWithRegexAndReferences:@"(?P<show>.*).S(?P<season>[0-9]{2})E(?P<episode>[0-9]{2}).(?P<strTeams>.*)",
                                                      @"${show}", &show, @"${season}", &season, @"${episode}", &episode,
-                                                     @"${strTeams}", &strTeams, nil]) {
-        [filename getCapturesWithRegexAndReferences:@"(?P<show>.*).?(?P<season>[0-9]{1,2})x(?P<episode>[0-9]{1,2}).(?P<strTeams>.*)",
-                                                    @"${show}", &show, @"${season}", &season, @"${episode}", &episode,
-                                                    @"${strTeams}", &strTeams, nil];
-
+                                                     @"${strTeams}", &strTeams, nil]
+            || ![filename getCapturesWithRegexAndReferences:@"(?P<show>.*).?(?P<season>[0-9]{1,2})x(?P<episode>[0-9]{1,2}).(?P<strTeams>.*)",
+                                                            @"${show}", &show, @"${season}", &season, @"${episode}", &episode,
+                                                            @"${strTeams}", &strTeams, nil]) {
+        return NO;
     }
     show = [[show stringByReplacingOccurrencesOfString:@"." withString:@" "]
             stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     teams = [strTeams componentsSeparatedByString:@"."];
+    return YES;
 }
 
 - (void)dealloc {

@@ -24,10 +24,13 @@
     return self;
 }
 
-- (void)guessFileData {
-    NSString *strTeams;
-    [filename getCapturesWithRegexAndReferences:@"(?P<movie>.*)[\\.|\\[|\\(| ]{1}(?P<year>(?:(?:19|20)[0-9]{2}))[\\.|\\[|\\(| ]{1}(?P<strTeams>.*)",
-                                                @"${movie}", &movie, @"${year}", &year, @"${strTeams}", &strTeams, nil];
+- (BOOL)guessFileData {
+    NSString *strTeams, *strYear;
+    if (![filename getCapturesWithRegexAndReferences:@"(?P<movie>.*)[\\.|\\[|\\(| ]{1}(?P<strYear>(?:(?:19|20)[0-9]{2}))[\\.|\\]|\\)| ]{1}(?P<strTeams>.*)",
+                                                     @"${movie}", &movie, @"${strYear}", &strYear, @"${strTeams}", &strTeams, nil]) {
+        return NO;
+    }
+    year = [strYear integerValue];
     movie = [[movie stringByReplacingOccurrencesOfString:@"." withString:@" "]
             stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSMutableArray *dirtyTeams = [NSMutableArray arrayWithArray:[strTeams componentsSeparatedByCharactersInSet:
@@ -41,6 +44,7 @@
         [dirtyTeams removeObjectsMatchingRegex:@"cd2"];
     }
     teams = [NSArray arrayWithArray:dirtyTeams];
+    return YES;
 }
 
 - (void)dealloc {

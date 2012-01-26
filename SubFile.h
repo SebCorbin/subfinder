@@ -24,6 +24,6 @@
 
 - (id)findType;
 
-- (void)guessFileData;
+- (BOOL)guessFileData;
 
 @end
