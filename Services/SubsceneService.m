@@ -17,18 +17,17 @@
     NSMutableArray *subtitles = [[NSMutableArray alloc] init];
 
     // Get the episode URL
-    NSString *url = [[NSString stringWithFormat:@"%@/filmsearch.aspx?q=%@", [SubsceneService serviceHost], [file movie]]
-            stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString *movieList = [NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
+    NSString *url = [NSString stringWithFormat:@"%@/filmsearch.aspx?q=%@", [SubsceneService serviceHost], [[file movie]
+            stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *movieList = [ServicesController getContentFromUrl:[NSURL URLWithString:url]];
 
     // Parse the content of the movie list
     HTMLParser *parser = [[[HTMLParser alloc] initWithString:movieList error:nil] autorelease];
-    // @TODO handle parsing error
     HTMLNode *node = [parser body];
     NSString *subList = nil;
 
     for (HTMLNode *a in [node findChildrenOfClass:@"popular"]) {
-        RKRegex *regex = [RKRegex regexWithRegexString:[NSString stringWithFormat:@"%@ \\(%@\\)",
+        RKRegex *regex = [RKRegex regexWithRegexString:[NSString stringWithFormat:@"%@ \\(%d\\)",
                                                                                   [[file movie] lowercaseString],
                                                                                   [file year]]
                                                options:RKCompileCaseless];
@@ -48,7 +47,6 @@
         for (HTMLNode *a in [table findChildrenWithAttribute:@"class" matchingName:@"a1" allowPartial:NO]) {
             if ([[[a findChildTag:@"span"] getAttributeNamed:@"class"] isEqualToString:@"r100"] &&
                     [[[a findChildTag:@"span"] allContents] isMatchedByRegex:[SubsceneService getFullLanguageName:langKey]]) {
-                // @TODO teams
                 NSMutableArray *subTeams = [[[NSMutableArray alloc]
                         initWithArray:[[[[a findChildTags:@"span"] lastObject] contents] componentsSeparatedByCharactersInSet:
                                 [NSCharacterSet characterSetWithCharactersInString:@"- ._"]]] autorelease];

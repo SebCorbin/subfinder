@@ -16,6 +16,7 @@
 @synthesize serviceWindow;
 
 - (void)awakeFromNib {
+    [Logger log:@"Nib initialized"];
     [preferencesWindow center];
     [self initializePreferences];
 }
@@ -30,15 +31,18 @@
 }
 
 /**
- * Service : find a subtitle
+ * Helper method : process a file
  */
-- (void)processFilePath:(NSString *)path {
-    id file;
-    file = [[[[SubFile alloc] initWithLocalUrl:path] findType] autorelease];
-    [(SubFile *) file guessFileData];
+- (BOOL)processFilePath:(NSString *)path {
+    id file = [[[[SubFile alloc] initWithLocalUrl:path] findType] autorelease];
+    if (![file guessFileData]) {
+        [Logger log:@"Could not guess file data"];
+        return NO;
+    }
 
     if ([[ServicesController chosenServices] count] == 0) {
         [Logger log:@"No service chosen"];
+        // @TODO Alert when no service chosen
     }
 
     NSMutableArray *subtitles = [NSMutableArray array];

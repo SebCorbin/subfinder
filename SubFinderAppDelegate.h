@@ -18,6 +18,7 @@
 // Services
 #import "Addic7edService.h"
 #import "BetaseriesService.h"
+#import "SubsceneService.h"
 #import "ServicesController.h"
 
 @class SubSheetController;
