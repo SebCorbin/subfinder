@@ -33,17 +33,10 @@
                                                             @"${strTeams}", &strTeams, nil]) {
         return NO;
     }
-    show = [[show stringByReplacingOccurrencesOfString:@"." withString:@" "]
-            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    teams = [strTeams componentsSeparatedByString:@"."];
+    show =[[[show stringByReplacingOccurrencesOfString:@"." withString:@" "]
+            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] retain];
+    teams = [[strTeams componentsSeparatedByString:@"."] retain];
     return YES;
-}
-
-- (void)dealloc {
-    [episode release];
-    [show release];
-    [season release];
-    [super dealloc];
 }
 
 @end

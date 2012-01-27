@@ -14,8 +14,7 @@
 
 - (NSMutableArray *)searchSubtitlesForSubFile:(id)file {
     // Initialization
-    file = (SubFileMovie *) file;
-    NSMutableArray *subtitles = [[NSMutableArray array] autorelease];
+    NSMutableArray *subtitles = [[NSMutableArray alloc] init];
 
     // Get the episode URL
     NSString *url = [[NSString stringWithFormat:@"%@/filmsearch.aspx?q=%@", [SubsceneService serviceHost], [file movie]]

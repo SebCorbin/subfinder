@@ -19,6 +19,7 @@
         localUrl = [[subFile localUrl] copy];
         filename = [[subFile filename] copy];
         part = 0;
+        year = 0;
     }
 
     return self;
@@ -43,12 +44,11 @@
         part = 2;
         [dirtyTeams removeObjectsMatchingRegex:@"cd2"];
     }
-    teams = [NSArray arrayWithArray:dirtyTeams];
+    teams = [[[NSArray alloc] initWithArray:dirtyTeams] retain];
     return YES;
 }
 
 - (void)dealloc {
-    [movie release];
     [super dealloc];
 }
 

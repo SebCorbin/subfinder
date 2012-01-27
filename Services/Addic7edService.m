@@ -28,7 +28,7 @@
 - (NSMutableArray *)searchSubtitlesForSubFile:(id)file {
     // Initialization
     file = (SubFileShow *) file;
-    NSMutableArray *subtitles = [[NSMutableArray array] autorelease];
+    NSMutableArray *subtitles = [NSMutableArray array];
 
     // Get the episode URL
     NSString *name = [[[file show] lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
