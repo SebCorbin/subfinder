@@ -22,7 +22,6 @@
 
 /* Begin PBXBuildFile section */
 		256AC3DA0F4B6AC300CF3369 /* SubFinderAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* SubFinderAppDelegate.m */; };
-		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		BE4BDFFB1369EC5E00078374 /* SubSource.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4BDFFA1369EC5E00078374 /* SubSource.m */; };
@@ -45,6 +44,7 @@
 		C01FCF5008A9545400542497 /* Addic7edService.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A9545400542496 /* Addic7edService.m */; };
 		C01FCF5008A954540054249A /* BetaseriesService.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A9545400542499 /* BetaseriesService.m */; };
 		C01FCF5008A954540054249C /* ServicesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A954540054249B /* ServicesController.m */; };
+		C01FCF5008A95454005424A0 /* SubsceneService.m in Sources */ = {isa = PBXBuildFile; fileRef = C01FCF5008A954540054249F /* SubsceneService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +72,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		1DDD58150DA1D0A300B32029 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
@@ -115,6 +114,8 @@
 		C01FCF5008A9545400542499 /* BetaseriesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BetaseriesService.m; path = Services/BetaseriesService.m; sourceTree = "<group>"; };
 		C01FCF5008A954540054249B /* ServicesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServicesController.m; sourceTree = "<group>"; };
 		C01FCF5008A954540054249D /* ServicesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServicesController.h; sourceTree = "<group>"; };
+		C01FCF5008A954540054249E /* SubsceneService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SubsceneService.h; path = Services/SubsceneService.h; sourceTree = "<group>"; };
+		C01FCF5008A954540054249F /* SubsceneService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SubsceneService.m; path = Services/SubsceneService.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,12 +144,12 @@
 			children = (
 				C01FCF5008A954540054249D /* ServicesController.h */,
 				C01FCF5008A954540054249B /* ServicesController.m */,
+				256AC3D80F4B6AC300CF3369 /* SubFinderAppDelegate.h */,
 				256AC3D90F4B6AC300CF3369 /* SubFinderAppDelegate.m */,
 				C01FCF5008A954540054248F /* SubSheetController.m */,
 				C01FCF5008A9545400542491 /* SubSheetController.h */,
 				C01FCF5008A9545400542486 /* Models */,
 				C01FCF5008A954540054248E /* HTMLParser */,
-				256AC3D80F4B6AC300CF3369 /* SubFinderAppDelegate.h */,
 				BE4BDFFF1369EDBA00078374 /* Logger.h */,
 				BE4BE0001369EDBA00078374 /* Logger.m */,
 			);
@@ -214,7 +215,6 @@
 				BEFE5432133E350400FD95C8 /* SubFinder.icns */,
 				BEFE542F133E146400FD95C8 /* dsa_pub.pem */,
 				8D1107310486CEB800E47090 /* SubFinder-Info.plist */,
-				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58150DA1D0A300B32029 /* MainMenu.xib */,
 			);
 			name = Resources;
@@ -257,6 +257,8 @@
 		C01FCF5008A954540054248A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				C01FCF5008A954540054249F /* SubsceneService.m */,
+				C01FCF5008A954540054249E /* SubsceneService.h */,
 				C01FCF5008A9545400542499 /* BetaseriesService.m */,
 				C01FCF5008A9545400542498 /* BetaseriesService.h */,
 				C01FCF5008A9545400542496 /* Addic7edService.m */,
@@ -351,7 +353,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				BEA459EB14AF31B0009209A8 /* MainMenu.xib in Resources */,
 				BEFE5430133E146400FD95C8 /* dsa_pub.pem in Resources */,
 				BEFE5433133E350400FD95C8 /* SubFinder.icns in Resources */,
@@ -415,6 +416,7 @@
 				C01FCF5008A9545400542497 /* Addic7edService.m in Sources */,
 				C01FCF5008A954540054249A /* BetaseriesService.m in Sources */,
 				C01FCF5008A954540054249C /* ServicesController.m in Sources */,
+				C01FCF5008A95454005424A0 /* SubsceneService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,17 +437,6 @@
 			targetProxy = BE40824A138127B400753391 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				089C165DFE840E0CC02AAC07 /* English */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		BE72ECA41352F10600B09E39 /* Debug */ = {

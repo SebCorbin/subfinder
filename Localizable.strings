@@ -1,18 +1,6 @@
-/* Localizations */
-"Done : %d subtitle(s) found" = "Done : %d subtitle(s) found";
-"Done with no results" = "Done with no results";
-"No file input" = "No file input";
-"Searching subtitles for “%@“" = "Searching subtitles for “%@“";
-"Source file was not found" = "Source file was not found";
-"Input is a directory" = "Input is a directory";
-"File name is %@" = "File name is %@";
-"Searching Addic7ed" = "Searching Addic7ed";
-"No subtitles found for %@" = "No subtitles found for %@";
-"Searching Betaseries" = "Searching Betaseries";
-"English" = "English";
-"Betaseries request : %@" = "Betaseries request : %@";
-"French" = "French";
-"German" = "German";
-"Italian" = "Italian";
-"Spanish" = "Spanish";
-"Portuguese" = "Portuguese";
+/****************************************************************************/
+/* Localization file */
+
+
+"Service started" = "Service started";
+"Please verify your internet connection" = "Please verify your internet connection";
