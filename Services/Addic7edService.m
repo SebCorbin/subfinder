@@ -39,7 +39,6 @@
 
     // Parse the content of the episode page
     HTMLParser *parser = [[[HTMLParser alloc] initWithString:content error:nil] autorelease];
-    // @TODO handle parsing error
     HTMLNode *node = [parser body];
 
     // Get the potential sub-teams
@@ -121,7 +120,7 @@
         }
         NSError *writeError = nil;
         if (![data writeToURL:srtUrl options:NSDataWritingAtomic error:&writeError]) {
-            // @TODO error while writing
+            [[NSAlert alertWithError:writeError] runModal];
         }
     }
 }

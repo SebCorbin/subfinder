@@ -94,7 +94,7 @@
     }
     NSError *writeError = nil;
     if (![data writeToURL:srtUrl options:NSDataWritingAtomic error:&writeError]) {
-        // @TODO error while writing
+        [[NSAlert alertWithError:writeError] runModal];
     }
 
 }
