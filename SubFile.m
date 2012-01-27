@@ -9,6 +9,7 @@
 #import "SubFile.h"
 #import "SubFileShow.h"
 #import "SubFileMovie.h"
+#import "SubFinderAppDelegate.h"
 
 @implementation SubFile
 
@@ -49,7 +50,10 @@
         return [[SubFileMovie alloc] initWithSubFile:self];
     }
     else {
-        // @TODO No regex matched
+        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"UnknownFileType", @"UnknownFileType")
+                                         defaultButton:@"OK" alternateButton:nil otherButton:nil
+                             informativeTextWithFormat:NSLocalizedString(@"UnknownFileTypeComment", @"The file type (movie or show) could not be determined.")];
+        [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:[NSApp delegate] didEndSelector:@selector(terminateApp:) contextInfo:nil];
     }
     return nil;
 }
