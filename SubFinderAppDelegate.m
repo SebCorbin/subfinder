@@ -6,8 +6,6 @@
 //  Copyright 2011 SebCorbin. All rights reserved.
 //
 
-#define DEBUG 0
-
 #import "SubFinderAppDelegate.h"
 
 @implementation SubFinderAppDelegate
@@ -27,9 +25,6 @@
     [Logger log:@"Application initialized"];
     // Registering service
     [NSApp setServicesProvider:self];
-    if (DEBUG) {
-        [self findSubtitle:nil userData:nil error:nil];
-    }
 }
 
 /**
@@ -50,47 +45,56 @@
         id serviceClass = [service class];
         if ([file class] == NSClassFromString(@"SubFileShow") && [serviceClass handlesShows] ||
                 [file class] == NSClassFromString(@"SubFileMovie") && [serviceClass handlesMovies]) {
+            // Query each service chosen
+            [Logger log:@"Querying %@", serviceName];
             [subtitles addObjectsFromArray:[service searchSubtitlesForSubFile:file]];
         }
     }
 
     if ([subtitles count]) {
         [subSheet showSubtitles:subtitles inWindow:serviceWindow];
+        return YES;
     }
-    if ([[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"CloseOnSuccess"]) {
-        [NSApp terminate:nil];
-    }
+    return NO;
 }
 
+/**
+ * Service : find a subtitle
+ */
 - (void)findSubtitle:(NSPasteboard *)pBoard userData:(NSString *)userData error:(NSString **)error {
     // Window behaviour
     [preferencesWindow close];
+    [serviceWindow center];
+    [serviceWindow makeKeyAndOrderFront:nil];
 
-    // @TODO Verify internet connectivity
-
-    NSString *msgServiceStarted = @"Service started";
+    NSString *msgServiceStarted = NSLocalizedString(@"Service started", @"ServiceStarted");
     [Logger log:msgServiceStarted];
     [progressLabel setStringValue:msgServiceStarted];
     [progressIndicator startAnimation:nil];
-    [serviceWindow center];
-    [serviceWindow makeKeyAndOrderFront:nil];
 
     NSArray *types = [pBoard types];
     if ([types containsObject:NSFilenamesPboardType]) {
         NSArray *files = [pBoard propertyListForType:NSFilenamesPboardType];
+        int filesFound = 0;
         for (NSString *path in files) {
-            // Here file is a local URL
-            [self processFilePath:path];
+            // Here the file is a local URL
+            [Logger log:@"Searching subtitles for %@", path];
+            if ([self processFilePath:path]) {
+                filesFound++;
+            }
         }
-    }
-    else if (!DEBUG) {
-        [progressLabel setStringValue:NSLocalizedString(@"No file input", @"Message displayed when no file was passed as parameter.")];
-        [NSApp waitUntilExit];
-    }
-
-    //Debug
-    if (DEBUG && pBoard == nil) {
-        [self processFilePath:@"/Users/sebastien/Downloads/Films/Cowboys and Aliens (2011) DVDRip XviD-MAXSPEED/Cowboys and Aliens (2011) DVDRip XviD-MAXSPEED www.torentz.3xforum.ro.avi"];
+        if ([files count] == filesFound &&
+                [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"CloseOnSuccess"]) {
+            [NSApp terminate:nil];
+        }
+        else {
+            // Some subtitles were not found, notify user
+            NSString *msgSubsNotFound = [NSString stringWithFormat:NSLocalizedString(@"%d subtitle(s) not found", @"MsgSubsNotFound"),
+                                                                   [files count] - filesFound];
+            [Logger log:msgSubsNotFound];
+            [progressLabel setStringValue:msgSubsNotFound];
+            [progressIndicator setHidden:YES];
+        }
     }
 }
 
