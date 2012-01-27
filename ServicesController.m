@@ -67,20 +67,20 @@
 + (NSString *)getContentFromUrl:(NSURL *)url {
     NSURLRequest *query = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy
                                        timeoutInterval:60.0];
-    [Logger log:@"%@", [url absoluteString]];
     NSURLResponse *response = nil;
     NSError **error = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:error];
     if (!response) {
-        NSAlert *alert = [NSAlert alertWithMessageText:@"No network connection" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Please verify your internet connectivity", @"VerifyConnection")];
-
+        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoNetworkConnection", @"No network connection")
+                                         defaultButton:@"OK" alternateButton:nil otherButton:nil
+                             informativeTextWithFormat:NSLocalizedString(@"VerifyConnection", @"Please verify your internet connectivity")];
         [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:[NSApp delegate] didEndSelector:@selector(terminateApp:) contextInfo:nil];
     }
     else {
         // HTTP Status code must be 200
         int statusCode = [(NSHTTPURLResponse *) response statusCode];
         if (statusCode == 404) {
-            // @TODO Handle 404
+            [Logger log:@"Page %@ returned 404", [url absoluteString]];
         }
         else if (statusCode == 200) {
             return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
