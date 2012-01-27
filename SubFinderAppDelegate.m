@@ -13,6 +13,8 @@
 /**
  * On Nib display
  */
+@synthesize serviceWindow;
+
 - (void)awakeFromNib {
     [preferencesWindow center];
     [self initializePreferences];
@@ -205,6 +207,11 @@
 - (id)comboBox:(NSComboBox *)aComboBox objectValueForItemAtIndex:(NSInteger)index {
     return [[ServicesController languagesForServices] objectForKey:
             [[[ServicesController languagesForServices] allKeys] objectAtIndex:index]];
+}
+
+- (void)dealloc {
+    [serviceWindow release];
+    [super dealloc];
 }
 
 @end

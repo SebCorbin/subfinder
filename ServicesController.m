@@ -7,7 +7,6 @@
 //
 
 #import "ServicesController.h";
-#import "SubFinderAppDelegate.h"
 
 @implementation ServicesController
 
@@ -75,7 +74,7 @@
     if (!response) {
         NSAlert *alert = [NSAlert alertWithMessageText:@"No network connection" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Please verify your internet connectivity", @"VerifyConnection")];
 
-        [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+        [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:[NSApp delegate] didEndSelector:@selector(terminateApp:) contextInfo:nil];
     }
     else {
         // HTTP Status code must be 200

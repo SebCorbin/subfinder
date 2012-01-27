@@ -42,6 +42,8 @@
     IBOutlet SubSheetController *subSheet;
 }
 
+@property(nonatomic, retain) NSWindow *serviceWindow;
+
 - (IBAction)terminateApp:(id)sender;
 
 - (void)initializePreferences;

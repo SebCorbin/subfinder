@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "ServiceProtocol.h"
+#import "SubFinderAppDelegate.h"
 
 @interface ServicesController : NSObject {
 
