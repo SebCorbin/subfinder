@@ -22,10 +22,11 @@
     if (self) {
         localUrl = [[[NSURL alloc] initFileURLWithPath:path] retain];
         // Get the filename
+        NSError *error;
         NSFileWrapper *file = [[NSFileWrapper alloc] initWithURL:localUrl
                                                          options:NSFileWrapperReadingWithoutMapping error:NULL];
         if (!file) {
-            // @TODO Source file was not found
+            [[NSAlert alertWithError:error] runModal];
         }
         if (![file isRegularFile]) {
             // @TODO Input is a directory
