@@ -42,7 +42,8 @@
 
     if ([[ServicesController chosenServices] count] == 0) {
         [Logger log:@"No service chosen"];
-        // @TODO Alert when no service chosen
+        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoServiceChosen", @"No service chosen") defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"RetryWithServices", @"Please retry with some services")];
+        [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:[NSApp delegate] didEndSelector:@selector(choseServices) contextInfo:nil];
     }
 
     NSMutableArray *subtitles = [NSMutableArray array];
@@ -144,9 +145,9 @@
         [checkBox setTitle:nil];
         [servicesBox addSubview:checkBox];
         [checkBox bind:@"value" toObject:[NSUserDefaultsController sharedUserDefaultsController]
-           withKeyPath:[@"values.Services." stringByAppendingString:[service serviceName]]
+           withKeyPath:[@"values.Service" stringByAppendingString:[service serviceName]]
                options:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-                                                   forKey:@"NSContinuouslyUpdatesValue"]];
+                                                   forKey:@"NSContinuouslyUpdatesValueBindingOption"]];
 
         // Then the service name
         NSTextField *nameText = [[NSTextField alloc] initWithFrame:NSMakeRect(32, y - 1, 150, 18)];
@@ -171,6 +172,10 @@
     }
 }
 
+- (void)choseServices {
+    [serviceWindow close];
+    [preferencesWindow makeKeyAndOrderFront:nil];
+}
 
 /**
  * Create hyperlink

@@ -25,9 +25,9 @@
 + (NSArray *)chosenServices {
     NSArray *services = [ServicesController allServices];
     NSMutableArray *chosen = [NSMutableArray array];
-    NSDictionary *preferences = [[NSUserDefaultsController sharedUserDefaultsController] values];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     for (NSString *service in services) {
-        if ([preferences valueForKeyPath:[@"Services." stringByAppendingString:service]]) {
+        if ([defaults boolForKey:[@"Service" stringByAppendingString:service]]) {
             [chosen addObject:service];
         }
     }
@@ -71,9 +71,7 @@
     NSError **error = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:error];
     if (!response) {
-        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoNetworkConnection", @"No network connection")
-                                         defaultButton:@"OK" alternateButton:nil otherButton:nil
-                             informativeTextWithFormat:NSLocalizedString(@"VerifyConnection", @"Please verify your internet connectivity")];
+        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoNetworkConnection", @"No network connection") defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"VerifyConnection", @"Please verify your internet connectivity")];
         [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:[NSApp delegate] didEndSelector:@selector(terminateApp:) contextInfo:nil];
     }
     else {
