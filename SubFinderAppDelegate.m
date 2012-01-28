@@ -31,9 +31,46 @@
 }
 
 /**
- * Helper method : process a file
+ * Helper method: process a path for sub-paths
  */
-- (BOOL)processFilePath:(NSString *)path {
+- (int)processPath:(NSString *)path filesNumber:(int *)filesToFind {
+    int filesFound = 0;
+    NSArray *allowedExtensions = [@"mp4,avi,mpeg4,mkv,wmv,mov" componentsSeparatedByString:@","];
+    // If the path is a directory, perform the search recursively
+    if ([[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL]
+            valueForKey:@"NSFileType"] == NSFileTypeDirectory) {
+        // This is not a regular file, so it does not count
+        (*filesToFind)--;
+        [Logger log:@"%@ a directory", path];
+        // All subdirectories will be searched recursively
+        id fileList = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:path error:nil];
+        for (id file in fileList) {
+            id filePath = [path stringByAppendingPathComponent:file];
+            // Now we check if the file type is a video
+            if ([[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:NULL] valueForKey:@"NSFileType"]
+                    != NSFileTypeDirectory && [allowedExtensions containsObject:[filePath pathExtension]]) {
+                [Logger log:@"Searching subtitles for %@", filePath];
+                (*filesToFind)++;
+                if ([self processFile:filePath]) {
+                    filesFound++;
+                }
+            }
+        }
+    }
+    else if ([allowedExtensions containsObject:[path pathExtension]]) {
+        [Logger log:@"Searching subtitles for %@", path];
+        (*filesToFind)++;
+        if ([self processFile:path]) {
+            filesFound++;
+        }
+    }
+    return filesFound;
+}
+
+/**
+ * Helper method: process a file
+ */
+- (BOOL)processFile:(NSString *)path {
     id file = [[[[SubFile alloc] initWithLocalUrl:path] findType] autorelease];
     if (![file guessFileData]) {
         [Logger log:@"Could not guess file data"];
@@ -82,22 +119,19 @@
     NSArray *types = [pBoard types];
     if ([types containsObject:NSFilenamesPboardType]) {
         NSArray *files = [pBoard propertyListForType:NSFilenamesPboardType];
-        int filesFound = 0;
+        int filesFound = 0, filesToFind = [files count];
         for (NSString *path in files) {
             // Here the file is a local URL
-            [Logger log:@"Searching subtitles for %@", path];
-            if ([self processFilePath:path]) {
-                filesFound++;
-            }
+            filesFound += [self processPath:path filesNumber:&filesToFind];
         }
-        if ([files count] == filesFound &&
+        if (filesToFind == filesFound &&
                 [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"CloseOnSuccess"]) {
             [NSApp terminate:nil];
         }
         else {
             // Some subtitles were not found, notify user
             NSString *msgSubsNotFound = [NSString stringWithFormat:NSLocalizedString(@"%d subtitle(s) not found", @"MsgSubsNotFound"),
-                                                                   [files count] - filesFound];
+                                                                   filesToFind - filesFound];
             [Logger log:msgSubsNotFound];
             [progressLabel setStringValue:msgSubsNotFound];
             [progressIndicator setHidden:YES];
