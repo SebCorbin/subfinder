@@ -15,7 +15,7 @@
     if (services == nil) {
         services = [[NSArray alloc] initWithObjects:
                 @"Addic7ed",
-                @"Betaseries",
+                //@"Betaseries",
                 @"Subscene",
                 nil];
     }
