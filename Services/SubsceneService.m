@@ -23,10 +23,10 @@
 
     // Parse the content of the movie list
     HTMLParser *parser = [[[HTMLParser alloc] initWithString:movieList error:nil] autorelease];
-    HTMLNode *node = [parser body];
+    HTMLNode *node = [[parser body] findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO];
     NSString *subList = nil;
 
-    for (HTMLNode *a in [node findChildrenOfClass:@"popular"]) {
+    for (HTMLNode *a in [node findChildTags:@"a"]) {
         RKRegex *regex = [RKRegex regexWithRegexString:[NSString stringWithFormat:@"%@ \\(%d\\)",
                                                                                   [[file movie] lowercaseString],
                                                                                   [file year]]
@@ -37,6 +37,7 @@
             subList = [NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
             parser = [[[HTMLParser alloc] initWithString:subList error:nil] autorelease];
             node = [parser body];
+            break;
         }
     }
     if (subList) {
