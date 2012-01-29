@@ -105,8 +105,8 @@
     [query setValue:[[source link] absoluteString] forHTTPHeaderField:@"Referer"];
     NSURLResponse *response = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:NULL];
-    if ([[response suggestedFilename] isEqualToString:@"downloadexceeded.php"]) {
-        //[Logger log:@"Too many downloads from Addic7ed for today"];
+    if ([[response suggestedFilename] isEqualToString:@"downloadexceeded.php.html"]) {
+        [Logger log:@"Too many downloads from Addic7ed for today"];
     }
     else {
         // Storing .srt
