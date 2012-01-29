@@ -143,6 +143,9 @@
 - (void)initializePreferences {
     [languagesComboBox setDataSource:self];
     id langValue = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKeyPath:@"Language"];
+	if(!langValue) {
+		langValue = @"English";
+	}
     [languagesComboBox selectItemAtIndex:[[[ServicesController languagesForServices] allValues] indexOfObject:langValue]];
     [languagesComboBox sendAction:@selector(filterServicesForLanguage:) to:self];
 }
