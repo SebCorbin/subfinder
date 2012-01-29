@@ -39,8 +39,6 @@
     // If the path is a directory, perform the search recursively
     if ([[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL]
             valueForKey:@"NSFileType"] == NSFileTypeDirectory) {
-        // This is not a regular file, so it does not count
-        (*filesToFind)--;
         [Logger log:@"%@ a directory", path];
         // All subdirectories will be searched recursively
         id fileList = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:path error:nil];
@@ -119,7 +117,7 @@
     NSArray *types = [pBoard types];
     if ([types containsObject:NSFilenamesPboardType]) {
         NSArray *files = [pBoard propertyListForType:NSFilenamesPboardType];
-        int filesFound = 0, filesToFind = [files count];
+        int filesFound = 0, filesToFind = 0;
         for (NSString *path in files) {
             // Here the file is a local URL
             filesFound += [self processPath:path filesNumber:&filesToFind];

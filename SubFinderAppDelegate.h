@@ -53,7 +53,7 @@
 
 - (void)setHyperLink:(NSTextField *)inTextField label:(NSString *)label stringURL:(NSString *)stringURL;
 
-- (int)processPath:(NSString *)path filesNumber:(int)filesToFind;
+- (int)processPath:(NSString *)path filesNumber:(int *)filesToFind;
 
 - (BOOL)processFile:(NSString *)path;
 
