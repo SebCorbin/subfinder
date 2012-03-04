@@ -1,13 +1,9 @@
 //
 //  Created by sebastien on 07/01/12.
 //
-// To change the template use AppCode | Preferences | File Templates.
-//
-
 
 #import "SubsceneService.h"
 #import "ServicesController.h"
-#import "SubSource.h"
 
 
 @implementation SubsceneService
@@ -23,22 +19,28 @@
 
     // Parse the content of the movie list
     HTMLParser *parser = [[[HTMLParser alloc] initWithString:movieList error:nil] autorelease];
-    HTMLNode *node = [[parser body] findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO];
+    HTMLNode *node = [parser body];
     NSString *subList = nil;
 
-    for (HTMLNode *a in [node findChildTags:@"a"]) {
-        RKRegex *regex = [RKRegex regexWithRegexString:[NSString stringWithFormat:@"%@ \\(%d\\)",
-                                                                                  [[file movie] lowercaseString],
-                                                                                  [file year]]
-                                               options:RKCompileCaseless];
-        NSString *title = [[a contents] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if ([title isMatchedByRegex:regex]) {
-            url = [[SubsceneService serviceHost] stringByAppendingString:[a getAttributeNamed:@"href"]];
-            subList = [NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
-            parser = [[[HTMLParser alloc] initWithString:subList error:nil] autorelease];
-            node = [parser body];
-            break;
+    if ([node findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO]) {
+        node = [node findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO];
+        for (HTMLNode *a in [node findChildTags:@"a"]) {
+            RKRegex *regex = [RKRegex regexWithRegexString:[NSString stringWithFormat:@"%@ \\(%d\\)",
+                                                                                      [[file movie] lowercaseString],
+                                                                                      [file year]]
+                                                   options:RKCompileCaseless];
+            NSString *title = [[a contents] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            if ([title isMatchedByRegex:regex]) {
+                url = [[SubsceneService serviceHost] stringByAppendingString:[a getAttributeNamed:@"href"]];
+                subList = [NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
+                parser = [[[HTMLParser alloc] initWithString:subList error:nil] autorelease];
+                node = [parser body];
+                break;
+            }
         }
+    }
+    else {
+        subList = movieList;
     }
     if (subList) {
         NSString *langKey = [[[ServicesController languagesForServices]
