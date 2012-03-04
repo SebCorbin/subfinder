@@ -77,29 +77,64 @@
 + (void)downloadSubtitleForSource:(SubSource *)source {
     NSString *content = [NSString stringWithContentsOfURL:[source link] encoding:NSUTF8StringEncoding error:nil];
 
-    // Parse the content of the movie list
+    // Parse the content of the subtitle page
     HTMLNode *form = [[[[HTMLParser alloc] initWithString:content error:nil] body] findChildTag:@"form"];
     NSURL *srtUrl = [NSURL URLWithString:[[SubsceneService serviceHost] stringByAppendingString:
             [[[[form findChildOfClass:@"downloadLink rating100"]
                     getAttributeNamed:@"href"] componentsSeparatedByString:@"\""] objectAtIndex:7]]];
     // Set up a request with the current link as 'Referer'
-    NSMutableURLRequest *query = [NSMutableURLRequest requestWithURL:srtUrl];
-    [query setValue:[[source link] absoluteString] forHTTPHeaderField:@"Referer"];
+    NSString *variables = [NSString stringWithFormat:@"subtitleId=%@&filmId=%@&typeId=%@",
+                                                     [[form findChildWithAttribute:@"name" matchingName:@"subtitleId" allowPartial:NO] getAttributeNamed:@"value"],
+                                                     [[form findChildWithAttribute:@"name" matchingName:@"filmId" allowPartial:NO] getAttributeNamed:@"value"],
+                                                     [[form findChildWithAttribute:@"name" matchingName:@"typeId" allowPartial:NO] getAttributeNamed:@"value"]
+    ];
+    NSData *postVariables = [variables dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:srtUrl];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:[[source link] absoluteString] forHTTPHeaderField:@"Referer"];
+    [request setHTTPBody:postVariables];
     NSURLResponse *response = nil;
-    NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:NULL];
-    // Storing .srt
-    if ([[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"RenameFile"]) {
-        srtUrl = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:@"srt"];
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:NULL];
+    if ([[response MIMEType] isEqualToString:@"application/zip"]) {
+        NSURL *zipUrl = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:@"zip"];;
+        //NSURL *zipUrl = [NSURL fileURLWithPath:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:[response suggestedFilename]]];
+        NSError *writeError;
+        if (![data writeToURL:zipUrl atomically:YES]) {
+            // Error creating zip
+        }
+        NSTask *unzip = [[NSTask alloc] init];
+        NSPipe *zipPipe = [NSPipe pipe];
+        [unzip setLaunchPath:@"/usr/bin/unzip"];
+        [unzip setStandardOutput:zipPipe];
+        [unzip setArguments:[NSArray arrayWithObjects:@"-p", [NSString stringWithFormat:@"%@", [zipUrl relativePath]], nil]];
+        [unzip launch];
+        NSData *zipData = [[zipPipe fileHandleForReading] readDataToEndOfFile];
+        NSURL *srtUrl = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:@"srt"];
+        [zipData writeToURL:srtUrl options:YES error:&writeError];
+        [unzip waitUntilExit];
+        [unzip release];
+        NSFileManager *fm = [NSFileManager defaultManager];
+        if (![fm removeItemAtURL:zipUrl error:NULL]) {
+            // error deleting
+        }
+        else {
+            // successfully deleted
+        }
+        [fm release];
     }
-    else {
-        srtUrl = [[[[source originalFile] localUrl] URLByDeletingLastPathComponent]
-                URLByAppendingPathComponent:[response suggestedFilename]];
+    else {    // Storing .srt
+        if ([[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"RenameFile"]) {
+            srtUrl = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:@"srt"];
+        }
+        else {
+            srtUrl = [[[[source originalFile] localUrl] URLByDeletingLastPathComponent]
+                    URLByAppendingPathComponent:[response suggestedFilename]];
+        }
+        NSError *writeError = nil;
+        if (![data writeToURL:srtUrl options:NSDataWritingAtomic error:&writeError]) {
+            [[NSAlert alertWithError:writeError] runModal];
+        }
     }
-    NSError *writeError = nil;
-    if (![data writeToURL:srtUrl options:NSDataWritingAtomic error:&writeError]) {
-        [[NSAlert alertWithError:writeError] runModal];
-    }
-
 }
 
 + (BOOL)handlesMovies {

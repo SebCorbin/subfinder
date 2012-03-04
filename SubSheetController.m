@@ -7,6 +7,7 @@
 //
 
 #import "SubSheetController.h";
+#import "Logger.h"
 
 @implementation SubSheetController
 
@@ -14,6 +15,7 @@
 - (IBAction)downloadSubtitle:(id)sender {
     // Get current selected subtitle
     SubSource *subSource = [subtitles objectAtIndex:[table selectedRow]];
+    [Logger log:@"Downloading from link %@", [subSource link]];
     [[subSource sourceClass] downloadSubtitleForSource:subSource];
     [NSApp endSheet:subPanel];
     [subPanel orderOut:nil];
