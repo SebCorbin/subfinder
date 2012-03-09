@@ -25,26 +25,25 @@
     if ([node findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO]) {
         node = [node findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO];
         for (HTMLNode *a in [node findChildTags:@"a"]) {
-            RKRegex *regex = [RKRegex regexWithRegexString:[NSString stringWithFormat:@"%@ \\(%d\\)",
-                                                                                      [[file movie] lowercaseString],
-                                                                                      [file year]]
-                                                   options:RKCompileCaseless];
+            NSString *regexExpr = [NSString stringWithFormat:@"%@ \\(%d\\)", [[file movie] lowercaseString], [file year]];
+            RKRegex *regex = [RKRegex regexWithRegexString:regexExpr options:RKCompileCaseless];
             NSString *title = [[a contents] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if ([title isMatchedByRegex:regex]) {
                 url = [[SubsceneService serviceHost] stringByAppendingString:[a getAttributeNamed:@"href"]];
                 subList = [NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
                 parser = [[[HTMLParser alloc] initWithString:subList error:nil] autorelease];
                 node = [parser body];
+                [Logger log:@"Found %@ by search on subscene: %@", [file movie], url];
                 break;
             }
         }
     }
     else {
+        [Logger log:@"Found %@ directly on subscene: %@", [file movie], url];
         subList = movieList;
     }
     if (subList) {
         NSString *hearingPref = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"];
-        NSLog(@"Hearing %@", [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"]);
         NSString *langKey = [[[ServicesController languagesForServices]
                 allKeysForObject:[[[NSUserDefaultsController sharedUserDefaultsController] values]
                                          valueForKeyPath:@"Language"]] lastObject];
@@ -52,9 +51,9 @@
         for (HTMLNode *a in [table findChildrenWithAttribute:@"class" matchingName:@"a1" allowPartial:NO]) {
             if ([[[a findChildTag:@"span"] getAttributeNamed:@"class"] isEqualToString:@"r100"] &&
                     [[[a findChildTag:@"span"] allContents] isMatchedByRegex:[SubsceneService getFullLanguageName:langKey]]) {
-                NSMutableArray *subTeams = [[[NSMutableArray alloc]
-                        initWithArray:[[[[a findChildTags:@"span"] lastObject] contents] componentsSeparatedByCharactersInSet:
-                                [NSCharacterSet characterSetWithCharactersInString:@"- ._"]]] autorelease];
+                NSString *teams = [[[a findChildTags:@"span"] lastObject] contents];
+                NSMutableArray *subTeams = [[[teams componentsSeparatedByCharactersInSet:
+                        [NSCharacterSet characterSetWithCharactersInString:@"- ._"]] mutableCopy] autorelease];
                 int prev = [subTeams count];
                 [subTeams removeObjectsInArray:[file teams]];
                 // We removed teams from the possible subtitle teams, so if same number as previously, teams don't match
@@ -65,15 +64,17 @@
                 NSString *link = [[SubsceneService serviceHost] stringByAppendingString:[a getAttributeNamed:@"href"]];
                 NSNumber *hearing = [[NSNumber alloc] initWithBool:
                         [[[[a parent] parent] findChildrenWithAttribute:@"id" matchingName:@"imgEar" allowPartial:NO] count] > 0];
-                if (![hearingPref isEqualToString:@"Whatever"] && hearing != [hearingPref isEqualToString:@"Yes"]) {
+                if (![hearingPref isEqualToString:@"Whatever"] && [hearing boolValue] != [hearingPref isEqualToString:@"Yes"]) {
                     continue;
                 }
-                NSString *team = [[[a findChildTags:@"span"] lastObject] contents];
                 SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[[NSURL alloc] initWithString:link]
-                                                                     file:file team:team hearing:hearing] autorelease];
+                                                                     file:file team:teams hearing:hearing] autorelease];
                 [subtitles addObject:subSource];
             }
         }
+    }
+    else {
+        [Logger log:@"Could not find %@ in subscene search", [file movie]];
     }
 
     return subtitles;
