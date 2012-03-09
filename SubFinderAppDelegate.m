@@ -93,8 +93,14 @@
         }
     }
 
-    if ([subtitles count]) {
+    if ([subtitles count] > 1) {
         [subSheet showSubtitles:subtitles inWindow:serviceWindow];
+        return YES;
+    }
+    else if ([subtitles count] == 1) {
+        SubSource *subSource = [subtitles objectAtIndex:0];
+        [Logger log:@"Downloading from link %@", [subSource link]];
+        [[subSource sourceClass] downloadSubtitleForSource:subSource];
         return YES;
     }
     return NO;
@@ -143,9 +149,9 @@
 - (void)initializePreferences {
     [languagesComboBox setDataSource:self];
     id langValue = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKeyPath:@"Language"];
-	if(!langValue) {
-		langValue = @"English";
-	}
+    if (!langValue) {
+        langValue = @"English";
+    }
     [languagesComboBox selectItemAtIndex:[[[ServicesController languagesForServices] allValues] indexOfObject:langValue]];
     [languagesComboBox sendAction:@selector(filterServicesForLanguage:) to:self];
 }
@@ -169,7 +175,7 @@
     // Resizing Window
     NSRect frame = [preferencesWindow frame];
     frame.origin.y = 464 - expandHeight;
-    frame.size.height = 160 + expandHeight;
+    frame.size.height = 184 + expandHeight;
     [preferencesWindow setFrame:frame display:YES animate:YES];
 
     for (id service in servicesForLanguage) {

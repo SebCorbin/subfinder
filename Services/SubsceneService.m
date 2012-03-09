@@ -43,6 +43,8 @@
         subList = movieList;
     }
     if (subList) {
+        NSString *hearingPref = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"];
+        NSLog(@"Hearing %@", [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"]);
         NSString *langKey = [[[ServicesController languagesForServices]
                 allKeysForObject:[[[NSUserDefaultsController sharedUserDefaultsController] values]
                                          valueForKeyPath:@"Language"]] lastObject];
@@ -63,6 +65,9 @@
                 NSString *link = [[SubsceneService serviceHost] stringByAppendingString:[a getAttributeNamed:@"href"]];
                 NSNumber *hearing = [[NSNumber alloc] initWithBool:
                         [[[[a parent] parent] findChildrenWithAttribute:@"id" matchingName:@"imgEar" allowPartial:NO] count] > 0];
+                if (![hearingPref isEqualToString:@"Whatever"] && hearing != [hearingPref isEqualToString:@"Yes"]) {
+                    continue;
+                }
                 NSString *team = [[[a findChildTags:@"span"] lastObject] contents];
                 SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[[NSURL alloc] initWithString:link]
                                                                      file:file team:team hearing:hearing] autorelease];

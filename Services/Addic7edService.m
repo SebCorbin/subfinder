@@ -46,6 +46,9 @@
             initWithArray:[[[file teams] componentsJoinedByString:@"-"]
                                   componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"- ._"]]];
 
+    NSString *hearingPref = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"];
+    NSLog(@"Hearing %@", [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"]);
+
     for (HTMLNode *td in [node findChildrenWithAttribute:@"class" matchingName:@"NewsTitle" allowPartial:NO]) {
         // Verify the release pattern
         NSString *subTeamsString = nil;
@@ -80,16 +83,19 @@
                 continue;
             }
             // Find if there is hearing impaired
-            NSNumber *hearingImpaired = [NSNumber numberWithBool:NO];
+            NSNumber *hearing = [NSNumber numberWithBool:NO];
             if ([[[[lang parent] nextNode] findChildrenWithAttribute:@"title" matchingName:@"Hearing Impaired" allowPartial:NO] count]) {
-                hearingImpaired = [NSNumber numberWithBool:YES];
+                hearing = [NSNumber numberWithBool:YES];
+            }
+            if (![hearingPref isEqualToString:@"Whatever"] && [hearing boolValue] != [hearingPref isEqualToString:@"Yes"]) {
+                continue;
             }
 
             // Subtitle found
             HTMLNode *tdSubtitle = [[lang parent] findChildWithAttribute:@"colspan" matchingName:@"3" allowPartial:0];
             NSString *link = [NSString stringWithFormat:@"http://www.addic7ed.com%@", [[[tdSubtitle findChildTags:@"a"] lastObject] getAttributeNamed:@"href"]];
             SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[[NSURL alloc] initWithString:link]
-                                                                 file:file team:subTeamsString hearing:hearingImpaired] autorelease];
+                                                                 file:file team:subTeamsString hearing:hearing] autorelease];
             [subtitles addObject:subSource];
         }
     }
