@@ -18,8 +18,12 @@
 }
 
 -(id)initWithContentsOfURL:(NSURL*)url error:(NSError**)error;
++ (id)parseWithContentsOfURL:(NSURL *)url;
+
 -(id)initWithData:(NSData*)data error:(NSError**)error;
 -(id)initWithString:(NSString*)string error:(NSError**)error;
+
++ (id)parseWithString:(NSString *)contentString;
 
 //Returns the doc tag
 -(HTMLNode*)doc;

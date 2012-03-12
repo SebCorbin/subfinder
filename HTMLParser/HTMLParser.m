@@ -12,117 +12,109 @@
 
 @implementation HTMLParser
 
--(HTMLNode*)doc
-{
-	if (_doc == NULL)
-		return NULL;
-	
-	return [[[HTMLNode alloc] initWithXMLNode:(xmlNode*)_doc] autorelease];
+- (HTMLNode *)doc {
+    if (_doc == NULL)
+        return NULL;
+
+    return [[[HTMLNode alloc] initWithXMLNode:(xmlNode *) _doc] autorelease];
 }
 
--(HTMLNode*)html
-{
-	if (_doc == NULL)
-		return NULL;
-	
-	return [[self doc] findChildTag:@"html"];
+- (HTMLNode *)html {
+    if (_doc == NULL)
+        return NULL;
+
+    return [[self doc] findChildTag:@"html"];
 }
 
--(HTMLNode*)body
-{
-	if (_doc == NULL)
-		return NULL;
-	
-	return [[self doc] findChildTag:@"body"];
+- (HTMLNode *)body {
+    if (_doc == NULL)
+        return NULL;
+
+    return [[self doc] findChildTag:@"body"];
 }
 
--(id)initWithString:(NSString*)string error:(NSError**)error
-{ 
-	if (self = [super init])
-	{
-		_doc = NULL;
-		
-		if ([string length] > 0)
-		{
-			CFStringEncoding cfenc = CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding);
-			CFStringRef cfencstr = CFStringConvertEncodingToIANACharSetName(cfenc);
-			const char *enc = CFStringGetCStringPtr(cfencstr, 0);
-			// _doc = htmlParseDoc((xmlChar*)[string UTF8String], enc);
-			int optionsHtml = 0;
-			optionsHtml = optionsHtml | HTML_PARSE_RECOVER;
-			optionsHtml = optionsHtml | HTML_PARSE_NOERROR; //Uncomment this to see HTML errors
-			optionsHtml = optionsHtml | HTML_PARSE_NOWARNING;
-			_doc = htmlReadDoc ((xmlChar*)[string UTF8String], NULL, enc, optionsHtml);
-		}
-		else 
-		{
-			if (error) {
-				*error = [NSError errorWithDomain:@"HTMLParserdomain" code:1 userInfo:nil];
-			}
-		}
-	}
-	
-	return self;
+- (id)initWithString:(NSString *)string error:(NSError **)error {
+    if (self = [super init]) {
+        _doc = NULL;
+
+        if ([string length] > 0) {
+            CFStringEncoding cfenc = CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding);
+            CFStringRef cfencstr = CFStringConvertEncodingToIANACharSetName(cfenc);
+            const char *enc = CFStringGetCStringPtr(cfencstr, 0);
+            // _doc = htmlParseDoc((xmlChar*)[string UTF8String], enc);
+            int optionsHtml = 0;
+            optionsHtml = optionsHtml | HTML_PARSE_RECOVER;
+            optionsHtml = optionsHtml | HTML_PARSE_NOERROR; //Uncomment this to see HTML errors
+            optionsHtml = optionsHtml | HTML_PARSE_NOWARNING;
+            _doc = htmlReadDoc((xmlChar *) [string UTF8String], NULL, enc, optionsHtml);
+        }
+        else {
+            if (error) {
+                *error = [NSError errorWithDomain:@"HTMLParserdomain" code:1 userInfo:nil];
+            }
+        }
+    }
+
+    return self;
 }
-
--(id)initWithData:(NSData*)data error:(NSError**)error
-{
-	if (self = [super init])
-	{
-		_doc = NULL;
-
-		if (data)
-		{
-			CFStringEncoding cfenc = CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding);
-			CFStringRef cfencstr = CFStringConvertEncodingToIANACharSetName(cfenc);
-			const char *enc = CFStringGetCStringPtr(cfencstr, 0);
-			//_doc = htmlParseDoc((xmlChar*)[data bytes], enc);
-			
-			_doc = htmlReadDoc((xmlChar*)[data bytes],
-							 "",
-							enc,
-							XML_PARSE_NOERROR | XML_PARSE_NOWARNING);
-		}
-		else
-		{
-			if (error) 
-			{
-				*error = [NSError errorWithDomain:@"HTMLParserdomain" code:1 userInfo:nil];
-			}
-
-		}
-	}
-	
-	return self;
-}
-
--(id)initWithContentsOfURL:(NSURL*)url error:(NSError**)error
-{
-	
-	NSData * _data = [[NSData alloc] initWithContentsOfURL:url options:0 error:error];
-
-	if (_data == nil || *error)
-	{
-		[_data release];
-		return nil;
-	}
-	
-	[self initWithData:_data error:error];
-	
-	[_data release];
-	
-	return self;
++ (id)parseWithString:(NSString *)contentString {
+    return [[[HTMLParser alloc] initWithString:contentString error:nil] autorelease];
 }
 
 
--(void)dealloc
-{
-	if (_doc)
-	{
-		xmlFreeDoc(_doc);
-	}
-	
-	[super dealloc];
+- (id)initWithData:(NSData *)data error:(NSError **)error {
+    if (self = [super init]) {
+        _doc = NULL;
+
+        if (data) {
+            CFStringEncoding cfenc = CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding);
+            CFStringRef cfencstr = CFStringConvertEncodingToIANACharSetName(cfenc);
+            const char *enc = CFStringGetCStringPtr(cfencstr, 0);
+            //_doc = htmlParseDoc((xmlChar*)[data bytes], enc);
+
+            _doc = htmlReadDoc((xmlChar *) [data bytes],
+                    "",
+                    enc,
+                    XML_PARSE_NOERROR | XML_PARSE_NOWARNING);
+        }
+        else {
+            if (error) {
+                *error = [NSError errorWithDomain:@"HTMLParserdomain" code:1 userInfo:nil];
+            }
+
+        }
+    }
+
+    return self;
+}
+
+- (id)initWithContentsOfURL:(NSURL *)url error:(NSError **)error {
+
+    NSData *_data = [[NSData alloc] initWithContentsOfURL:url options:0 error:error];
+
+    if (_data == nil || *error) {
+        [_data release];
+        return nil;
+    }
+
+    [self initWithData:_data error:error];
+
+    [_data release];
+
+    return self;
+}
+
++ (id)parseWithContentsOfURL:(NSURL *)url {
+    return [[[HTMLParser alloc] initWithContentsOfURL:url error:nil] autorelease];
+}
+
+
+- (void)dealloc {
+    if (_doc) {
+        xmlFreeDoc(_doc);
+    }
+
+    [super dealloc];
 }
 
 @end
