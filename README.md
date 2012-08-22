@@ -1,23 +1,16 @@
 SubFinder
 =========
 
-This PoC is currently under active development.
+This PoC is abandoned, feel free to submit pull requests though.
 This app provides a service (a contextual menu) on Mac, it helps you download 
 automatically subtitles for your favorite shows.
 For now, it uses data from addic7ed.com and subscene.com to retrieve subtitles
 
 
-Current Status
---------------
-The Addic7ed and Subscene services are fully functional and provide subtitles
-for languages English, French, German, Italian, Spanish, Portuguese when 
-available.
-
-
 Roadmap
 ---------
 Services to be added as per the ServiceProtocol:
- * BetaSeries (in progress)
+ * BetaSeries
  * OpenSubtitles
  
 Don't hesitate to provide yours!

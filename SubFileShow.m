@@ -35,9 +35,14 @@
         }
     }
     show =[[[show stringByReplacingOccurrencesOfString:@"." withString:@" "]
-            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] retain];
-    teams = [[strTeams componentsSeparatedByString:@"."] retain];
+            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] autorelease];
+    teams = [[strTeams componentsSeparatedByString:@"."] autorelease];
     return YES;
+}
+
+- (void)dealloc {
+    [show release];
+    [super dealloc];
 }
 
 @end

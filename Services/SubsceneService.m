@@ -10,7 +10,7 @@
 
 - (NSMutableArray *)searchSubtitlesForSubFile:(id)file {
     // Initialization
-    NSMutableArray *subtitles = [[NSMutableArray alloc] init];
+    NSMutableArray *subtitles = [[[NSMutableArray alloc] init] autorelease];
 
     // Get the episode URL
     NSString *url = [NSString stringWithFormat:@"%@/filmsearch.aspx?q=%@", [SubsceneService serviceHost], [[file movie]
@@ -25,7 +25,7 @@
     if ([node findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO]) {
         node = [node findChildWithAttribute:@"id" matchingName:@"filmSearch" allowPartial:NO];
         for (HTMLNode *a in [node findChildTags:@"a"]) {
-            NSString *regexExpr = [NSString stringWithFormat:@"%@ \\(%d\\)", [[file movie] lowercaseString], [file year]];
+            NSString *regexExpr = [NSString stringWithFormat:@"%@ [ \\(\\)a-z0-9\\.]*\\(%d\\)", [[file movie] lowercaseString], [file year]];
             RKRegex *regex = [RKRegex regexWithRegexString:regexExpr options:RKCompileCaseless];
             NSString *title = [[a contents] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if ([title isMatchedByRegex:regex]) {
@@ -62,12 +62,12 @@
                 }
 
                 NSString *link = [[SubsceneService serviceHost] stringByAppendingString:[a getAttributeNamed:@"href"]];
-                NSNumber *hearing = [[NSNumber alloc] initWithBool:
-                        [[[[a parent] parent] findChildrenWithAttribute:@"id" matchingName:@"imgEar" allowPartial:NO] count] > 0];
+                NSNumber *hearing = [NSNumber numberWithBool:[[[[a parent] parent]
+                        findChildrenWithAttribute:@"id" matchingName:@"imgEar" allowPartial:NO] count] > 0];
                 if (![hearingPref isEqualToString:@"Whatever"] && [hearing boolValue] != [hearingPref isEqualToString:@"Yes"]) {
                     continue;
                 }
-                SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[[NSURL alloc] initWithString:link]
+                SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[NSURL URLWithString:link]
                                                                      file:file team:teams hearing:hearing] autorelease];
                 [subtitles addObject:subSource];
             }
@@ -84,7 +84,7 @@
     NSString *content = [NSString stringWithContentsOfURL:[source link] encoding:NSUTF8StringEncoding error:nil];
 
     // Parse the content of the subtitle page
-    HTMLNode *form = [[[[HTMLParser alloc] initWithString:content error:nil] body] findChildTag:@"form"];
+    HTMLNode *form = [[[HTMLParser parseWithString:content] body] findChildTag:@"form"];
     NSURL *srtUrl = [NSURL URLWithString:[[SubsceneService serviceHost] stringByAppendingString:
             [[[[form findChildOfClass:@"downloadLink rating100"]
                     getAttributeNamed:@"href"] componentsSeparatedByString:@"\""] objectAtIndex:7]]];
@@ -102,40 +102,12 @@
     NSURLResponse *response = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:NULL];
     if ([[response MIMEType] isEqualToString:@"application/zip"]) {
-        NSURL *zipUrl = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:@"zip"];;
-        //NSURL *zipUrl = [NSURL fileURLWithPath:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:[response suggestedFilename]]];
-        NSError *writeError;
-        if (![data writeToURL:zipUrl atomically:YES]) {
-            // Error creating zip
-        }
-        NSTask *unzip = [[NSTask alloc] init];
-        NSPipe *zipPipe = [NSPipe pipe];
-        [unzip setLaunchPath:@"/usr/bin/unzip"];
-        [unzip setStandardOutput:zipPipe];
-        [unzip setArguments:[NSArray arrayWithObjects:@"-p", [NSString stringWithFormat:@"%@", [zipUrl relativePath]], nil]];
-        [unzip launch];
-        NSData *zipData = [[zipPipe fileHandleForReading] readDataToEndOfFile];
-        NSURL *srtUrl = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:@"srt"];
-        [zipData writeToURL:srtUrl options:YES error:&writeError];
-        [unzip waitUntilExit];
-        [unzip release];
-        NSFileManager *fm = [NSFileManager defaultManager];
-        if (![fm removeItemAtURL:zipUrl error:NULL]) {
-            // error deleting
-        }
-        else {
-            // successfully deleted
-        }
-        [fm release];
+        NSURL *zipUrl = [ServicesController getDestinationUrlForSource:source orResponse:response withExtension:@"zip"];
+        [ServicesController extractZipData:data atUrl:zipUrl];
     }
-    else {    // Storing .srt
-        if ([[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"RenameFile"]) {
-            srtUrl = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:@"srt"];
-        }
-        else {
-            srtUrl = [[[[source originalFile] localUrl] URLByDeletingLastPathComponent]
-                    URLByAppendingPathComponent:[response suggestedFilename]];
-        }
+    else {
+        // Storing .srt
+        srtUrl = [ServicesController getDestinationUrlForSource:source orResponse:response withExtension:@"srt"];
         NSError *writeError = nil;
         if (![data writeToURL:srtUrl options:NSDataWritingAtomic error:&writeError]) {
             [[NSAlert alertWithError:writeError] runModal];

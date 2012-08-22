@@ -41,7 +41,7 @@
             valueForKey:@"NSFileType"] == NSFileTypeDirectory) {
         [Logger log:@"%@ a directory", path];
         // All subdirectories will be searched recursively
-        id fileList = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:path error:nil];
+        NSArray *fileList = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:path error:nil];
         for (id file in fileList) {
             id filePath = [path stringByAppendingPathComponent:file];
             // Now we check if the file type is a video
@@ -77,13 +77,14 @@
 
     if ([[ServicesController chosenServices] count] == 0) {
         [Logger log:@"No service chosen"];
-        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoServiceChosen", @"No service chosen") defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"RetryWithServices", @"Please retry with some services")];
+        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoServiceChosen", @"") defaultButton:@"OK"
+                                       alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"RetryWithServices", @"")];
         [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:[NSApp delegate] didEndSelector:@selector(choseServices) contextInfo:nil];
     }
 
     NSMutableArray *subtitles = [NSMutableArray array];
     for (NSString *serviceName in [ServicesController chosenServices]) {
-        id service = [[NSClassFromString([serviceName stringByAppendingString:@"Service"]) alloc] init];
+        id service = [[[NSClassFromString([serviceName stringByAppendingString:@"Service"]) alloc] init] autorelease];
         id serviceClass = [service class];
         if ([file class] == NSClassFromString(@"SubFileShow") && [serviceClass handlesShows] ||
                 [file class] == NSClassFromString(@"SubFileMovie") && [serviceClass handlesMovies]) {
@@ -114,8 +115,9 @@
     [preferencesWindow close];
     [serviceWindow center];
     [serviceWindow makeKeyAndOrderFront:nil];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 
-    NSString *msgServiceStarted = NSLocalizedString(@"Service started", @"ServiceStarted");
+    NSString *msgServiceStarted = NSLocalizedString(@"ServiceStarted", @"");
     [Logger log:msgServiceStarted];
     [progressLabel setStringValue:msgServiceStarted];
     [progressIndicator startAnimation:nil];
@@ -134,7 +136,7 @@
         }
         else {
             // Some subtitles were not found, notify user
-            NSString *msgSubsNotFound = [NSString stringWithFormat:NSLocalizedString(@"%d subtitle(s) not found", @"MsgSubsNotFound"),
+            NSString *msgSubsNotFound = [NSString stringWithFormat:NSLocalizedString(@"SubtitlesNotFound", @""),
                                                                    filesToFind - filesFound];
             [Logger log:msgSubsNotFound];
             [progressLabel setStringValue:msgSubsNotFound];
@@ -159,7 +161,7 @@
 - (IBAction)filterServicesForLanguage:(id)sender {
     // Get current language
     NSString *langSelected = [[[ServicesController languagesForServices] allKeys]
-            objectAtIndex:[sender indexOfSelectedItem]];
+            objectAtIndex:(NSUInteger) [sender indexOfSelectedItem]];
 
     // Get services that handle language
     NSArray *servicesForLanguage = [ServicesController getServicesForLanguage:langSelected];
@@ -175,13 +177,13 @@
     // Resizing Window
     NSRect frame = [preferencesWindow frame];
     frame.origin.y = 464 - expandHeight;
-    frame.size.height = 184 + expandHeight;
+    frame.size.height = 188 + expandHeight;
     [preferencesWindow setFrame:frame display:YES animate:YES];
 
     for (id service in servicesForLanguage) {
         // Create elements
         // First, the checkbox
-        NSButton *checkBox = [[NSButton alloc] initWithFrame:NSMakeRect(14, y, 22, 18)];
+        NSButton *checkBox = [[[NSButton alloc] initWithFrame:NSMakeRect(14, y, 22, 18)] autorelease];
         [checkBox setButtonType:NSSwitchButton];
         [checkBox setTitle:nil];
         [servicesBox addSubview:checkBox];
@@ -191,7 +193,7 @@
                                                    forKey:@"NSContinuouslyUpdatesValueBindingOption"]];
 
         // Then the service name
-        NSTextField *nameText = [[NSTextField alloc] initWithFrame:NSMakeRect(32, y - 1, 150, 18)];
+        NSTextField *nameText = [[[NSTextField alloc] initWithFrame:NSMakeRect(32, y - 1, 150, 18)] autorelease];
         [nameText setStringValue:[service serviceName]];
         [nameText setBezeled:NO];
         [nameText setDrawsBackground:NO];
@@ -199,7 +201,7 @@
         [servicesBox addSubview:nameText];
 
         // Then the link to the service
-        NSTextField *linkText = [[NSTextField alloc] initWithFrame:NSMakeRect(182, y - 1, 230, 18)];
+        NSTextField *linkText = [[[NSTextField alloc] initWithFrame:NSMakeRect(182, y - 1, 230, 18)] autorelease];
         [self setHyperLink:linkText
                      label:[[service serviceHost] stringByReplacingOccurrencesOfString:@"http://" withString:@""]
                  stringURL:[service serviceHost]];
@@ -256,7 +258,7 @@
 
 - (id)comboBox:(NSComboBox *)aComboBox objectValueForItemAtIndex:(NSInteger)index {
     return [[ServicesController languagesForServices] objectForKey:
-            [[[ServicesController languagesForServices] allKeys] objectAtIndex:index]];
+            [[[ServicesController languagesForServices] allKeys] objectAtIndex:(NSUInteger) index]];
 }
 
 - (void)dealloc {

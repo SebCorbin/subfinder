@@ -9,6 +9,7 @@
 #import "BetaseriesService.h";
 #import "HTMLParser.h"
 #import "SubSource.h"
+#import "ServicesController.h"
 
 @implementation BetaseriesService
 
@@ -26,77 +27,42 @@
     file = (SubFileShow *) file;
     NSMutableArray *subtitles = [[NSMutableArray array] autorelease];
 
-    // @TODO : handle languages
-    NSString *language = @"VO";
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/subtitles/show.xml?file=%@&key=%@&language=%@",
-                                                                 @"http://api.betaseries.com",
+    NSString *language = [BetaseriesService getLanguageFromKey:[ServicesController getCurrentLanguageKey]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://api.betaseries.com/subtitles/show.xml?file=%@&key=%@&language=%@",
                                                                  [file filename],
                                                                  @"01d9224c4fd8", // API Key for BetaSeries
                                                                  language]];
-    /*
-    NSError **error = nil;
-    HTMLNode *doc = [[HTMLParser alloc] initWithContentsOfURL:url error:error];
+    NSString *content = [ServicesController getContentFromUrl:url];
+    HTMLNode *doc = [[HTMLParser parseWithString:content] body];
     for (HTMLNode *subtitle in [doc findChildTags:@"subtitle"]) {
-        //if(subtitle fin)
+        NSString *subTeamsString = [NSString stringWithFormat:@"Source: %@, quality: %@", [[subtitle findChildTag:@"source"] contents],
+                                                              [[subtitle findChildTag:@"quality"] contents]];
+        NSString *link = [[subtitle findChildTag:@"url"] contents];
+        SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[NSURL URLWithString:link] file:file
+                                                             team:subTeamsString hearing:nil] autorelease];
+        [subtitles addObject:subSource];
     }
-    */
+
     return subtitles;
 }
 
-
 + (void)downloadSubtitleForSource:(SubSource *)source {
-    /*
-    NSURLRequest *query = [NSURLRequest requestWithURL:[NSURL URLWithString:[source link]]
-                                               cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-        NSURLResponse *response = nil;
-        NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:NULL];
+    NSURLRequest *query = [NSURLRequest requestWithURL:[source link] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    NSURLResponse *response = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:NULL];
 
-        // Unzip
-        if ([[response MIMEType] isEqualToString:@"application/zip"]) {
-            NSURL *zipUrl = [NSURL fileURLWithPath:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:[response suggestedFilename]]];
-            NSError *writeError;
-            if (![data writeToURL:zipUrl atomically:YES]) {
-                // Error creating zip
-            }
-
-            NSTask *unzip = [[NSTask alloc] init];
-            NSPipe *zipPipe = [NSPipe pipe];
-            [unzip setLaunchPath:@"/usr/bin/unzip"];
-            [unzip setStandardOutput:zipPipe];
-            [unzip setArguments:[NSArray arrayWithObjects:@"-p", [NSString stringWithFormat:@"%@", [zipUrl relativePath]], nil]];
-            [unzip launch];
-
-            NSData *zipData = [[zipPipe fileHandleForReading] readDataToEndOfFile];
-
-            NSURL *srtUrl = [NSURL fileURLWithPath:[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"srt"]];
-            [zipData writeToURL:srtUrl options:YES error:&writeError];
-            [unzip waitUntilExit];
-            [unzip release];
-            NSFileManager *fm = [NSFileManager defaultManager];
-            if (![fm removeItemAtURL:zipUrl error:NULL]) {
-                // error deleting
-            }
-            else {
-                // successfully deleted
-            }
-            [fm release];
+    // Unzip
+    if ([[response MIMEType] isEqualToString:@"application/zip"]) {
+        NSURL *zipUrl = [ServicesController getDestinationUrlForSource:source orResponse:response withExtension:@"zip"];
+        [ServicesController extractZipData:data atUrl:zipUrl];
+    }
+    else {
+        NSError *writeError;
+        NSURL *srtUrl = [ServicesController getDestinationUrlForSource:source orResponse:response withExtension:@"srt"];
+        if (![data writeToURL:srtUrl options:YES error:&writeError]) {
+            //[Logger log:@"Erreur lors de l'enregistrement du fichier: %@", error];
         }
-        else {
-            NSError *writeError;
-            NSURL *srtUrl;
-            if ([[[[NSUserDefaultsController sharedUserDefaultsController] values]
-                    valueForKey:@"RenameFile"] booleanValue]) {
-                srtUrl = [NSURL fileURLWithPath:[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"srt"]];
-            }
-            else {
-                srtUrl = [NSURL fileURLWithPath:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:[response suggestedFilename]]];
-            }
-            //[Logger log:@"%@", srtUrl];
-            if (![data writeToURL:srtUrl options:YES error:&writeError]) {
-                //[Logger log:@"Erreur lors de l'enregistrement du fichier: %@", writeError];
-            }
-        }
-        */
+    }
 }
 
 + (BOOL)handlesMovies {
@@ -110,4 +76,12 @@
 + (BOOL)handlesShows {
     return YES;
 }
+
++ (NSString *)getLanguageFromKey:(NSString *)key {
+    return [[NSDictionary dictionaryWithObjectsAndKeys:
+            @"VO", @"en",
+            @"VF", @"fr",
+            nil] objectForKey:key];
+}
+
 @end

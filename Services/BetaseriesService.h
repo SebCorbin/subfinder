@@ -15,4 +15,5 @@
 
 }
 
++ (NSString *)getLanguageFromKey:(NSString *)key;
 @end

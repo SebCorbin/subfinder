@@ -25,7 +25,7 @@
         self.link = [[aLink copy] autorelease];
         self.originalFile = [[aFile copy] autorelease];
         self.team = [[aTeam copy] autorelease];
-        self.hearing = [isHearingImpaired copy];
+        self.hearing = [[isHearingImpaired copy] autorelease];
     }
     return self;
 }

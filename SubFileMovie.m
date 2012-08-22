@@ -44,7 +44,7 @@
         part = 2;
         [dirtyTeams removeObjectsMatchingRegex:@"cd2"];
     }
-    teams = [[[NSArray alloc] initWithArray:dirtyTeams] retain];
+    teams = [[NSArray arrayWithArray:dirtyTeams] retain];
     return YES;
 }
 

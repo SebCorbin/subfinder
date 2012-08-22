@@ -15,7 +15,7 @@
     if (services == nil) {
         services = [[NSArray alloc] initWithObjects:
                 @"Addic7ed",
-                //@"Betaseries",
+                @"Betaseries",
                 @"Subscene",
                 nil];
     }
@@ -71,7 +71,8 @@
     NSError **error = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:query returningResponse:&response error:error];
     if (!response) {
-        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoNetworkConnection", @"No network connection") defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"VerifyConnection", @"Please verify your internet connectivity")];
+        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"NoNetworkConnection", @"") defaultButton:@"OK"
+                                       alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"VerifyConnection", @"")];
         [alert beginSheetModalForWindow:[[NSApp delegate] serviceWindow] modalDelegate:[NSApp delegate] didEndSelector:@selector(terminateApp:) contextInfo:nil];
     }
     else {
@@ -87,5 +88,55 @@
     return nil;
 }
 
++ (NSString *)getCurrentLanguageKey {
+    id values = [[NSUserDefaultsController sharedUserDefaultsController] values];
+    return [[[ServicesController languagesForServices] allKeysForObject:[values valueForKeyPath:@"Language"]] lastObject];
+}
 
++ (void)extractZipData:(NSData *)data atUrl:(NSURL *)zipUrl {
+    NSError *error = nil;
+    if (![data writeToURL:zipUrl options:YES error:&error]) {
+        // Error creating zip
+        NSLog(@"Error writing zip %@", [error localizedDescription]);
+        return;
+    }
+
+    NSTask *unzip = [[NSTask alloc] init];
+    NSPipe *zipPipe = [NSPipe pipe];
+    [unzip setLaunchPath:@"/usr/bin/unzip"];
+    [unzip setStandardOutput:zipPipe];
+    [unzip setArguments:[NSArray arrayWithObjects:@"-p", [NSString stringWithFormat:@"%@", [zipUrl relativePath]], nil]];
+    [unzip launch];
+
+    NSData *zipData = [[zipPipe fileHandleForReading] readDataToEndOfFile];
+
+    NSURL *srtUrl = [[zipUrl URLByDeletingPathExtension] URLByAppendingPathExtension:@"srt"];
+    if (![zipData writeToURL:srtUrl options:YES error:&error]) {
+        // error creating
+        NSLog(@"Error writing srt %@", [error localizedDescription]);
+        return;
+    }
+
+    [unzip waitUntilExit];
+    [unzip release];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm removeItemAtURL:zipUrl error:&error]) {
+        // error deleting
+        NSLog(@"Error deleting zip %@", [error localizedDescription]);
+        return;
+    }
+    [fm release];
+}
+
++ (NSURL *)getDestinationUrlForSource:(SubSource *)source orResponse:(NSURLResponse *)response withExtension:(NSString *)extension {
+    NSURL *url;
+    if ([[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"RenameFile"] booleanValue]) {
+        url = [[[[source originalFile] localUrl] URLByDeletingPathExtension] URLByAppendingPathExtension:extension];
+    }
+    else {
+        url = [[[[source originalFile] localUrl] URLByDeletingLastPathComponent]
+                URLByAppendingPathComponent:[response suggestedFilename]];
+    }
+    return url;
+}
 @end

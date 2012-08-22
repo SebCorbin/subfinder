@@ -5,7 +5,6 @@
 #import "Addic7edService.h"
 #import "SubSource.h"
 #import "ServicesController.h"
-#import "SubFinderAppDelegate.h"
 
 @implementation Addic7edService
 
@@ -33,21 +32,18 @@
     // Get the episode URL
     NSString *name = [[[file show] lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
     NSString *query = [NSString stringWithFormat:@"%@/serie/%@/%@/%@/%@", [Addic7edService serviceHost], name,
-                                                 [file season], [file episode], name, nil];
-    NSURL *searchUrl = [[NSURL alloc] initWithString:query];
-    NSString *content = [ServicesController getContentFromUrl:searchUrl];
+                                                 [file season], [file episode], name];
+    NSString *content = [ServicesController getContentFromUrl:[NSURL URLWithString:query]];
 
     // Parse the content of the episode page
     HTMLParser *parser = [[[HTMLParser alloc] initWithString:content error:nil] autorelease];
     HTMLNode *node = [parser body];
 
     // Get the potential sub-teams
-    NSMutableArray *teams = [[NSMutableArray alloc]
-            initWithArray:[[[file teams] componentsJoinedByString:@"-"]
-                                  componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"- ._"]]];
+    NSMutableArray *teams = [NSMutableArray arrayWithArray:[[[file teams]
+            componentsJoinedByString:@"-"] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"- ._"]]];
 
     NSString *hearingPref = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"];
-    NSLog(@"Hearing %@", [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"HearingImpaired"]);
 
     for (HTMLNode *td in [node findChildrenWithAttribute:@"class" matchingName:@"NewsTitle" allowPartial:NO]) {
         // Verify the release pattern
@@ -69,10 +65,7 @@
         }
 
         // Get language
-        NSString *langKey = [[[ServicesController languagesForServices]
-                allKeysForObject:[[[NSUserDefaultsController sharedUserDefaultsController] values]
-                                         valueForKeyPath:@"Language"]] lastObject];
-        NSString *currentLanguage = [Addic7edService getLanguageFromKey:langKey];
+        NSString *currentLanguage = [Addic7edService getLanguageFromKey:[ServicesController getCurrentLanguageKey]];
         for (HTMLNode *lang in [table findChildrenWithAttribute:@"class" matchingName:@"language" allowPartial:0]) {
             if (![[[lang allContents] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]
                     isMatchedByRegex:currentLanguage]) {
@@ -94,8 +87,8 @@
             // Subtitle found
             HTMLNode *tdSubtitle = [[lang parent] findChildWithAttribute:@"colspan" matchingName:@"3" allowPartial:0];
             NSString *link = [NSString stringWithFormat:@"http://www.addic7ed.com%@", [[[tdSubtitle findChildTags:@"a"] lastObject] getAttributeNamed:@"href"]];
-            SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[[NSURL alloc] initWithString:link]
-                                                                 file:file team:subTeamsString hearing:hearing] autorelease];
+            SubSource *subSource = [[[SubSource alloc] initWithSource:[self class] link:[NSURL URLWithString:link] file:file
+                                                                 team:subTeamsString hearing:hearing] autorelease];
             [subtitles addObject:subSource];
         }
     }
@@ -105,8 +98,7 @@
 
 + (void)downloadSubtitleForSource:(SubSource *)source {
     // Modifying headers to get the .srt file
-    NSMutableURLRequest *query = [[NSURLRequest requestWithURL:[source link]
-                                                   cachePolicy:NSURLRequestUseProtocolCachePolicy
+    NSMutableURLRequest *query = [[NSURLRequest requestWithURL:[source link] cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                timeoutInterval:60.0] mutableCopy];
     [query setValue:[[source link] absoluteString] forHTTPHeaderField:@"Referer"];
     NSURLResponse *response = nil;
@@ -129,6 +121,7 @@
             [[NSAlert alertWithError:writeError] runModal];
         }
     }
+    [query release];
 }
 
 + (NSString *)getLanguageFromKey:(NSString *)key {

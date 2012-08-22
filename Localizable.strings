@@ -1,6 +1,17 @@
 /****************************************************************************/
 /* Localization file */
 
-
-"Service started" = "Service started";
-"Please verify your internet connection" = "Please verify your internet connection";
+"UnknownFileType" = "Could not guess file type";
+"UnknownFileTypeComment" = "The file type (movie or show) could not be determined.";
+"Portuguese" = "Portuguese";
+"Spanish" = "Spanish";
+"Italian" = "Italian";
+"German" = "German";
+"French" = "French";
+"English" = "English";
+"NoNetworkConnection" = "No network connection";
+"VerifyConnection" = "Please verify your internet connectivity";
+"NoServiceChosen" = "No service chosen";
+"RetryWithServices" = "Please retry with some services enabled";
+"ServiceStarted" = "Service started";
+"SubtitlesNotFound" = "%d subtitle(s) not found";
